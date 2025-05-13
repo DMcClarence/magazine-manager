@@ -15,9 +15,13 @@ import magazineservice.model.PayingCustomer;
  */
 public class CustomerDatabaseController {
     private CustomerDatabase dbRef;
+    private PayingCustomerController payingCustomerController;
+    private AssociateCustomerController associateCustomerController;
     
     public CustomerDatabaseController(CustomerDatabase db) {
         setDatabaseRef(db);
+        payingCustomerController = new PayingCustomerController();
+        associateCustomerController = new AssociateCustomerController();
     }
     
     public void addCustomer(Customer customer) {

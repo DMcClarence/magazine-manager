@@ -5,6 +5,7 @@
 package magazineservice.model;
 
 import java.util.HashMap;
+import magazineservice.controller.CustomerController;
 
 /**
  *
