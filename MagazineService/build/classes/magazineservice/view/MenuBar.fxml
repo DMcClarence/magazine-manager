@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<MenuBar fx:id="menuBar" xmlns:fx="http://javafx.com/fxml/1" fx:controller="magazineservice.controller.MenuBarController">
+    <Menu fx:id="fileMenu" text="File">
+        <MenuItem fx:id="newServiceOption" text="New Magazine Service" onAction="#CreateNewFile"></MenuItem>
+        <MenuItem fx:id="loadServiceOption" text="Load Magazine Service" onAction="#OpenExistingFile"></MenuItem>
+        <MenuItem fx:id="saveServiceOption" text="Save Magazine Service"></MenuItem>
+    </Menu>
+    <Menu fx:id="createMenu" text="Create">
+        <Menu fx:id="customerMenu" text="Customer">
+            <MenuItem fx:id="associateOption" text="Associate" onAction="#OpenCreateAssociateCustomerWindow"></MenuItem>
+            <MenuItem fx:id="payingOption" text="Paying" onAction="#OpenCreatePayingCustomerWindow"></MenuItem>
+        </Menu>
+        <Menu fx:id="magazineMenu" text="Magazine">
+            <MenuItem fx:id="supplementOption" text="Supplement" onAction="#OpenCreateSupplementMagazineWindow"></MenuItem> 
+        </Menu>
+    </Menu>
+</MenuBar>
