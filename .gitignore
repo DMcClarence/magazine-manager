@@ -23,3 +23,6 @@
 hs_err_pid*
 replay_pid*
 /MagazineService/nbproject/private/
+/MagazineService/build/
+/q1Main/nbproject/private/
+/MagazineService/dist/

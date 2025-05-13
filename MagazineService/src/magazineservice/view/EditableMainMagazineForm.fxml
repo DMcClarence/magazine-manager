@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="editableForm" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="magazineservice.controller.EditableMainMagazineFormController">
+    <center>
+        <VBox fx:id="fieldContainer" spacing="15.0f">
+            <children>
+                <HBox fx:id="titleField" spacing="5.0f">
+                    <Label fx:id="titleFieldLabel" text="Title: " alignment="CENTER_LEFT"></Label>
+                    <TextField fx:id="titleFieldTextBox"></TextField>
+                </HBox>
+                <HBox fx:id="weeklyCostField" spacing="5.0f">
+                    <Label fx:id="weeklyCostFieldLabel" text="Weekly Cost: " alignment="CENTER_LEFT"></Label>
+                    <TextField fx:id="weeklyCostFieldTextBox"></TextField>
+                </HBox>
+                <HBox fx:id="typeField" spacing="5.0f">
+                    <Label fx:id="typeFieldLabel" text="Type: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="mainLabel" text="Main"></Label>
+                </HBox>
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0f" left="10.0f" right="10.0f" top="10.0f" />
+            </BorderPane.margin>
+        </VBox>
+    </center>
+</BorderPane>
