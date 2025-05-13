@@ -18,10 +18,12 @@ import magazineservice.model.PaymentMethod;
 public class MagazineServiceDatabaseController {
     private MagazineServiceDatabase dbRef;
     private CustomerDatabaseController customerDBController;
+    private MagazineDatabaseController magazineDBController;
     
     public MagazineServiceDatabaseController(MagazineServiceDatabase db) {
         setDatabaseRef(db);
         customerDBController = new CustomerDatabaseController(db.getCustomerDatabase());
+        magazineDBController = new MagazineDatabaseController(db.getMagazineDatabase());
     }
     
     public void addCustomer(String name, String email, MainMagazine mainMag, PaymentMethod paymentMethod) {
@@ -43,6 +45,14 @@ public class MagazineServiceDatabaseController {
     
     public ArrayList<Customer> getAllCustomers() {
         return customerDBController.getAllCustomers();
+    }
+    
+    public MainMagazine getMainMagazine() {
+        return magazineDBController.getMainMagazine();
+    }
+    
+    public void createMainMagazine(String title, double weeklyCost) {
+        magazineDBController.createMainMagazine(title, weeklyCost);
     }
     
     public void setDatabaseRef(MagazineServiceDatabase db) {

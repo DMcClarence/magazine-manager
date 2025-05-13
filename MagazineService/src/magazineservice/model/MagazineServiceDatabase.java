@@ -10,12 +10,18 @@ package magazineservice.model;
  */
 public class MagazineServiceDatabase {
     private CustomerDatabase customerDB;
+    private MagazineDatabase magazineDB;
     
     public MagazineServiceDatabase() {
         customerDB = new CustomerDatabase();
+        magazineDB = new MagazineDatabase();
     }
     
     public CustomerDatabase getCustomerDatabase() {
         return this.customerDB;
+    }
+    
+    public MagazineDatabase getMagazineDatabase() {
+        return this.magazineDB;
     }
 }

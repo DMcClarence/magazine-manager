@@ -13,7 +13,7 @@ public abstract class Magazine {
     /**
      *
      */
-    protected String name;
+    protected String title;
 
     /**
      *
@@ -22,7 +22,7 @@ public abstract class Magazine {
 
     /**
      *
-     * @param name
+     * @param title
      * @param weeklyCost
      */
     public Magazine(String name, double weeklyCost) throws IllegalArgumentException {
@@ -34,19 +34,19 @@ public abstract class Magazine {
      *
      * @return
      */
-    public final String getName() {
-        return this.name;
+    public final String getTitle() {
+        return this.title;
     }
 
     /**
      *
-     * @param name
+     * @param title
      */
-    public final void setName(String name) throws IllegalArgumentException {
-        if (name == null || name.isEmpty()) {
+    public final void setName(String title) throws IllegalArgumentException {
+        if (title == null || title.isEmpty()) {
             throw new IllegalArgumentException("Magazine Name must not be null or empty");
         }
-        this.name = name;
+        this.title = title;
     }
 
     /**
@@ -76,6 +76,6 @@ public abstract class Magazine {
      */
     @Override
     public String toString() {
-        return String.format("{%s; %.2f;}", this.name, this.weeklyCost);
+        return String.format("{%s; %.2f;}", this.title, this.weeklyCost);
     }
 }

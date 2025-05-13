@@ -89,13 +89,13 @@ public final class PaymentEmailGenerator implements Generatable<String> {
 
         paymentBreakdown.append(recipient.getName());
         paymentBreakdown.append(":\n");
-        paymentBreakdown.append(recipient.getMainMag().getName());
+        paymentBreakdown.append(recipient.getMainMag().getTitle());
         paymentBreakdown.append(" - $");
         paymentBreakdown.append(String.format("%.2f", CostCalculator.calculateTotalCostForMonth(recipient.getMainMag(), period)));
         paymentBreakdown.append("\n");
 
         for (SupplementMagazine sm : recipient.getSuppMags()) {
-            paymentBreakdown.append(sm.getName());
+            paymentBreakdown.append(sm.getTitle());
             paymentBreakdown.append(" - $");
             paymentBreakdown.append(String.format("%.2f", CostCalculator.calculateTotalCostForMonth(sm, period)));
             paymentBreakdown.append("\n");
@@ -109,13 +109,13 @@ public final class PaymentEmailGenerator implements Generatable<String> {
 
             paymentBreakdown.append(ac.getName());
             paymentBreakdown.append(":\n");
-            paymentBreakdown.append(ac.getMainMag().getName());
+            paymentBreakdown.append(ac.getMainMag().getTitle());
             paymentBreakdown.append(" - $");
             paymentBreakdown.append(String.format("%.2f", CostCalculator.calculateTotalCostForMonth(ac.getMainMag(), period)));
             paymentBreakdown.append("\n");
 
             for (SupplementMagazine sm : ac.getSuppMags()) {
-                paymentBreakdown.append(sm.getName());
+                paymentBreakdown.append(sm.getTitle());
                 paymentBreakdown.append(" - $");
                 paymentBreakdown.append(String.format("%.2f", CostCalculator.calculateTotalCostForMonth(sm, period)));
                 paymentBreakdown.append("\n");
