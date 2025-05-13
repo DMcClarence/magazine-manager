@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 /**
  * FXML Controller class
@@ -25,7 +26,7 @@ public class EditablePayingCustomerFormController implements Initializable {
     private BorderPane editableForm;
     
     @FXML
-    private HBox fieldContainer;
+    private VBox fieldContainer;
     
     @FXML
     private HBox nameField;
