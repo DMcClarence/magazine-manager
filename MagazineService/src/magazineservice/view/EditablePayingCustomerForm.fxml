@@ -8,7 +8,7 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane fx:id="editableForm" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="magazineservice.controller.EditableAssociateCustomerFormController">
+      fx:controller="magazineservice.controller.EditablePayingCustomerFormController">
     <center>
         <VBox fx:id="fieldContainer" spacing="15.0f">
             <children>
