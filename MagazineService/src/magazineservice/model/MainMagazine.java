@@ -12,10 +12,10 @@ public final class MainMagazine extends Magazine {
 
     /**
      *
-     * @param name
+     * @param title
      * @param weeklyCost
      */
-    public MainMagazine(String name, double weeklyCost) throws IllegalArgumentException {
-        super(name, weeklyCost);
+    public MainMagazine(String title, double weeklyCost) throws IllegalArgumentException {
+        super(title, weeklyCost);
     }
 }
