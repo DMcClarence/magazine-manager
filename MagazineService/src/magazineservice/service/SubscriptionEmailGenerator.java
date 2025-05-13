@@ -52,7 +52,7 @@ public final class SubscriptionEmailGenerator implements Generatable<String> {
 
         for (SupplementMagazine sm : recipient.getSuppMags()) {
             magazineBreakdown.append("- ");
-            magazineBreakdown.append(sm.getName());
+            magazineBreakdown.append(sm.getTitle());
             magazineBreakdown.append("\n");
         }
 
@@ -65,7 +65,7 @@ public final class SubscriptionEmailGenerator implements Generatable<String> {
                              Here is a list of the supplements you are currently subscribed 
                              to for this month:
                              
-                             %s""", recipient.getName(), recipient.getMainMag().getName(), magazineBreakdown.toString());
+                             %s""", recipient.getName(), recipient.getMainMag().getTitle(), magazineBreakdown.toString());
     }
 
     /**
