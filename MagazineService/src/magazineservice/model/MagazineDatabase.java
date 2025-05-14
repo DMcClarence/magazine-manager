@@ -4,20 +4,32 @@
  */
 package magazineservice.model;
 
+import java.util.HashMap;
+
 /**
  *
  * @author 34085068
  */
 public class MagazineDatabase {
-    private MainMagazine mainMagazine = null;
+    private MainMagazine mainMagazine;
+    private HashMap<String, SupplementMagazine> supplementMagazines;
+    
+    public MagazineDatabase(String title, double weeklyCost) {
+        mainMagazine = new MainMagazine(title, weeklyCost);
+        supplementMagazines = new HashMap<String, SupplementMagazine>();
+    }
     
     public MainMagazine getMainMagazine() {
         return this.mainMagazine;
     }
     
-    public void createMainMagazine(String title, double weeklyCost) {
-        if(mainMagazine == null) {
-            this.mainMagazine = new MainMagazine(title, weeklyCost);
-        }
+    public HashMap<String, SupplementMagazine> getSupplementMagazines() {
+        return this.supplementMagazines;
     }
+    
+//    public void createMainMagazine(String title, double weeklyCost) {
+//        if(mainMagazine == null) {
+//            this.mainMagazine = new MainMagazine(title, weeklyCost);
+//        }
+//    }
 }

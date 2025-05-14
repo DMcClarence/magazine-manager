@@ -6,10 +6,12 @@ package magazineservice.controller;
 
 import java.util.ArrayList;
 import magazineservice.model.Customer;
+import magazineservice.model.Magazine;
 import magazineservice.model.MagazineServiceDatabase;
 import magazineservice.model.MainMagazine;
 import magazineservice.model.PayingCustomer;
 import magazineservice.model.PaymentMethod;
+import magazineservice.model.SupplementMagazine;
 
 /**
  *
@@ -51,9 +53,25 @@ public class MagazineServiceDatabaseController {
         return magazineDBController.getMainMagazine();
     }
     
-    public void createMainMagazine(String title, double weeklyCost) {
-        magazineDBController.createMainMagazine(title, weeklyCost);
+    public SupplementMagazine getSupplementMagazine(String title) {
+        return magazineDBController.getSupplementMagazine(title);
     }
+    
+    public Magazine getMagazine(String title) {
+        return magazineDBController.getMagazine(title);
+    }
+    
+    public ArrayList<SupplementMagazine> getAllSupplementMagazines() {
+        return magazineDBController.getAllSupplementMagazines();
+    }
+    
+    public ArrayList<Magazine> getAllMagazines() {
+        return magazineDBController.getAllMagazines();
+    }
+    
+//    public void createMainMagazine(String title, double weeklyCost) {
+//        magazineDBController.createMainMagazine(title, weeklyCost);
+//    }
     
     public void setDatabaseRef(MagazineServiceDatabase db) {
         this.dbRef = db;
