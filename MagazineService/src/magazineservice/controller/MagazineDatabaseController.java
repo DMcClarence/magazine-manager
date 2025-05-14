@@ -4,8 +4,11 @@
  */
 package magazineservice.controller;
 
+import java.util.ArrayList;
+import magazineservice.model.Magazine;
 import magazineservice.model.MagazineDatabase;
 import magazineservice.model.MainMagazine;
+import magazineservice.model.SupplementMagazine;
 
 /**
  *
@@ -22,7 +25,32 @@ public class MagazineDatabaseController {
         return dbRef.getMainMagazine();
     }
     
-    public void createMainMagazine(String title, double weeklyCost) {
-        dbRef.createMainMagazine(title, weeklyCost);
+    public SupplementMagazine getSupplementMagazine(String title) {
+        return dbRef.getSupplementMagazines().get(title);
     }
+    
+    public Magazine getMagazine(String title) {
+        if(title.equalsIgnoreCase(dbRef.getMainMagazine().getTitle())) {
+            return dbRef.getMainMagazine();
+        }
+        
+        return dbRef.getSupplementMagazines().get(title);
+    }
+    
+    public ArrayList<SupplementMagazine> getAllSupplementMagazines() {
+        return new ArrayList<SupplementMagazine>(dbRef.getSupplementMagazines().values());
+    }
+    
+    public ArrayList<Magazine> getAllMagazines() {
+        ArrayList<Magazine> magazines = new ArrayList<Magazine>();
+        
+        magazines.add(dbRef.getMainMagazine());
+        magazines.addAll(dbRef.getSupplementMagazines().values());
+        
+        return magazines;
+    }
+    
+//    public void createMainMagazine(String title, double weeklyCost) {
+//        dbRef.createMainMagazine(title, weeklyCost);
+//    }
 }

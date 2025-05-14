@@ -12,9 +12,9 @@ public class MagazineServiceDatabase {
     private CustomerDatabase customerDB;
     private MagazineDatabase magazineDB;
     
-    public MagazineServiceDatabase() {
+    public MagazineServiceDatabase(String title, double weeklyCost) {
         customerDB = new CustomerDatabase();
-        magazineDB = new MagazineDatabase();
+        magazineDB = new MagazineDatabase(title, weeklyCost);
     }
     
     public CustomerDatabase getCustomerDatabase() {
