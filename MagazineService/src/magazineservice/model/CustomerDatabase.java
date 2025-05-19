@@ -4,13 +4,14 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author 34085068
  */
-public class CustomerDatabase {
+public class CustomerDatabase implements Serializable {
     private HashMap<String, Customer> db;
     
     public CustomerDatabase() {

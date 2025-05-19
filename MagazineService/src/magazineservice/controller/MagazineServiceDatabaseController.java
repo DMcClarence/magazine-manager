@@ -4,6 +4,12 @@
  */
 package magazineservice.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import magazineservice.model.Customer;
 import magazineservice.model.Magazine;
@@ -22,15 +28,22 @@ public class MagazineServiceDatabaseController {
     private CustomerDatabaseController customerDBController;
     private MagazineDatabaseController magazineDBController;
     
-    public MagazineServiceDatabaseController(MagazineServiceDatabase db) {
-        setDatabaseRef(db);
-        customerDBController = new CustomerDatabaseController(db.getCustomerDatabase());
-        magazineDBController = new MagazineDatabaseController(db.getMagazineDatabase());
+    public MagazineServiceDatabaseController() {
+        dbRef = null;
+        customerDBController = null;
+        magazineDBController = null;
     }
     
-    public void addCustomer(String name, String email, MainMagazine mainMag, PaymentMethod paymentMethod) {
-        PayingCustomer customer = new PayingCustomer(name, email, mainMag, paymentMethod);
+    public MagazineServiceDatabaseController(MagazineServiceDatabase db) {
+        setDatabaseRef(db);
+    }
+    
+    public void addCustomer(Customer customer) {
         customerDBController.addCustomer(customer);
+    }
+    
+    public void addSupplementMagazine(SupplementMagazine supplementMagazine) {
+        magazineDBController.addSupplementMagazine(supplementMagazine);
     }
     
     public void removeCustomer(String email) {
@@ -69,11 +82,34 @@ public class MagazineServiceDatabaseController {
         return magazineDBController.getAllMagazines();
     }
     
-//    public void createMainMagazine(String title, double weeklyCost) {
-//        magazineDBController.createMainMagazine(title, weeklyCost);
-//    }
-    
     public void setDatabaseRef(MagazineServiceDatabase db) {
         this.dbRef = db;
+        customerDBController = new CustomerDatabaseController(db.getCustomerDatabase());
+        magazineDBController = new MagazineDatabaseController(db.getMagazineDatabase());
     }
+    
+    public void serializeDB(File dbFile) {
+        try {
+           ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(dbFile));
+           out.writeObject(dbRef);
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+    
+    public MagazineServiceDatabase deserializeDB(File dbFile) {
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(dbFile));
+            setDatabaseRef((MagazineServiceDatabase)in.readObject());
+        }
+        catch(IOException ioe) {
+            ioe.printStackTrace();
+        }
+        catch(ClassNotFoundException cnfe) {
+            cnfe.printStackTrace();
+        }
+        
+        return dbRef;
+    } 
 }

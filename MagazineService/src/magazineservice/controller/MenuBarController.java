@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -21,6 +22,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import magazineservice.MagazineService;
+import magazineservice.model.AssociateCustomer;
+import magazineservice.model.MagazineServiceDatabase;
+import magazineservice.model.PayingCustomer;
+import magazineservice.model.SupplementMagazine;
 
 /**
  * FXML Controller class
@@ -61,10 +68,10 @@ public class MenuBarController implements Initializable {
     @FXML
     private MenuItem supplementOption;
     
-    private static Stage primaryStage;
+    private MagazineServiceTreeViewController treeViewControllerRef;
 
     /**
-     * Initializes the controller class.
+     * Initializes the treeViewControllerRef class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,17 +79,33 @@ public class MenuBarController implements Initializable {
     
     @FXML
     public void CreateNewFile(ActionEvent e) {
+        Alert fileAlert;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File((System.getProperty("user.dir") + "/magazine-services")));
         fileChooser.getExtensionFilters().add(new ExtensionFilter("DAT Files", "*.dat"));
         
-        File db = fileChooser.showSaveDialog(primaryStage);
-        if(db != null) {
-            db.setWritable(true);
+        MagazineService.setDBFile(fileChooser.showSaveDialog((Stage)menuBar.getScene().getWindow()));
+        if(MagazineService.getDBFile() != null) {
+            MagazineService.getDBFile().setWritable(true);
             
             try {
-                this.OpenCreateMainMagazineWindow();
-                db.createNewFile();
+                MagazineService.setDatabase(this.OpenCreateMainMagazineWindow());
+                
+                if(MagazineService.getDatabase() != null) {
+                    MagazineService.setDBController(new MagazineServiceDatabaseController(MagazineService.getDatabase()));
+                    MagazineService.getDBFile().createNewFile();
+                    MagazineService.getDBController().serializeDB(MagazineService.getDBFile());
+                    treeViewControllerRef.clearTreeView();
+                    treeViewControllerRef.update();
+                    fileAlert = new Alert(Alert.AlertType.INFORMATION);
+                    fileAlert.setContentText("File Created");
+                }
+                else {
+                    fileAlert = new Alert(Alert.AlertType.ERROR);
+                    fileAlert.setContentText("File Not Created");
+                }
+                
+                fileAlert.showAndWait();
             }
             catch(IOException ioe) {
                 ioe.printStackTrace();
@@ -92,24 +115,62 @@ public class MenuBarController implements Initializable {
     
     @FXML
     public void OpenExistingFile(ActionEvent e) {
+        Alert fileAlert;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File((System.getProperty("user.dir") + "/magazine-services")));
         fileChooser.getExtensionFilters().add(new ExtensionFilter("DAT Files", "*.dat"));
-        fileChooser.showOpenDialog(primaryStage);
+        
+        MagazineService.setDBFile(fileChooser.showOpenDialog((Stage)menuBar.getScene().getWindow()));
+        if(MagazineService.getDBFile() != null) {
+            MagazineService.setDBController(new MagazineServiceDatabaseController());
+            MagazineService.setDatabase(MagazineService.getDBController().deserializeDB(MagazineService.getDBFile()));
+            if(MagazineService.getDatabase() != null) {
+                treeViewControllerRef.clearTreeView();
+                treeViewControllerRef.update();
+                fileAlert = new Alert(Alert.AlertType.INFORMATION);
+                fileAlert.setContentText("File Loaded Successfully");
+            }
+            else {
+                fileAlert = new Alert(Alert.AlertType.ERROR);
+                fileAlert.setContentText("File Not Loaded");
+            }
+                
+            fileAlert.showAndWait();
+        }
     }
     
     @FXML
     public void OpenCreateAssociateCustomerWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner((Stage)menuBar.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setAlwaysOnTop(true);
             stage.setTitle("Create Customer (Magazine Manager)");
-            Parent root = FXMLLoader.load(getClass().getResource("../view/EditableAssociateCustomerForm.fxml"));
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/CreateAssociateCustomerWindow.fxml"));
+            Parent root = loader.load();
+            CreateAssociateCustomerWindowController cacwc = loader.getController();
+            
             Scene scene = new Scene(root, 350, 350);
             stage.setScene(scene);
-            stage.showAndWait();   
+            stage.showAndWait();
+            
+            Alert fileAlert;
+            AssociateCustomer associateCustomer = cacwc.createAssociateCustomer();
+            if(associateCustomer != null) {
+                MagazineService.getDBController().addCustomer(associateCustomer);
+                treeViewControllerRef.clearTreeView();
+                treeViewControllerRef.update();
+                fileAlert = new Alert(Alert.AlertType.INFORMATION);
+                fileAlert.setContentText("Customer Created Successfully");
+            }
+            else {
+                fileAlert = new Alert(Alert.AlertType.ERROR);
+                fileAlert.setContentText("Customer Creation Failed");
+            }
+            
+            fileAlert.showAndWait();
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -120,14 +181,34 @@ public class MenuBarController implements Initializable {
     public void OpenCreatePayingCustomerWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner((Stage)menuBar.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setAlwaysOnTop(true);
+            // stage.setAlwaysOnTop(true);
             stage.setTitle("Create Customer (Magazine Manager)");
-            Parent root = FXMLLoader.load(getClass().getResource("../view/EditablePayingCustomerForm.fxml"));
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/CreatePayingCustomerWindow.fxml"));
+            Parent root = loader.load();
+            CreatePayingCustomerWindowController cpcwc = loader.getController();
+            
             Scene scene = new Scene(root, 350, 350);
             stage.setScene(scene);
-            stage.showAndWait();   
+            stage.showAndWait();
+            
+            Alert fileAlert;
+            PayingCustomer payingCustomer = cpcwc.createPayingCustomer();
+            if(payingCustomer != null) {
+                MagazineService.getDBController().addCustomer(payingCustomer);
+                treeViewControllerRef.clearTreeView();
+                treeViewControllerRef.update();
+                fileAlert = new Alert(Alert.AlertType.INFORMATION);
+                fileAlert.setContentText("Customer Created Successfully");
+            }
+            else {
+                fileAlert = new Alert(Alert.AlertType.ERROR);
+                fileAlert.setContentText("Customer Creation Failed");
+            }
+            
+            fileAlert.showAndWait();
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -138,38 +219,77 @@ public class MenuBarController implements Initializable {
     public void OpenCreateSupplementMagazineWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner((Stage)menuBar.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setAlwaysOnTop(true);
             stage.setTitle("Create Magazine (Magazine Manager)");
-            Parent root = FXMLLoader.load(getClass().getResource("../view/EditableSupplementMagazineForm.fxml"));
-            Scene scene = new Scene(root, 350, 350);
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/CreateSupplementMagazineWindow.fxml"));
+            Parent root = loader.load();
+            CreateSupplementMagazineWindowController csmwc = loader.getController();
+            
+            Scene scene = new Scene(root, 350, 350); 
             stage.setScene(scene);
-            stage.showAndWait();   
+            stage.showAndWait();
+            
+            Alert fileAlert;
+            SupplementMagazine supplementMagazine = csmwc.createSupplementMagazine();
+            if(supplementMagazine != null) {
+                MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
+                treeViewControllerRef.clearTreeView();
+                treeViewControllerRef.update();
+                fileAlert = new Alert(Alert.AlertType.INFORMATION);
+                fileAlert.setContentText("Supplement Created Successfully");
+            }
+            else {
+                fileAlert = new Alert(Alert.AlertType.ERROR);
+                fileAlert.setContentText("Supplement Creation Failed");
+            }
+            
+            fileAlert.showAndWait();
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
         }
     }
     
-    public void OpenCreateMainMagazineWindow() {
+    public MagazineServiceDatabase OpenCreateMainMagazineWindow() {
         try {
             Stage stage = new Stage();
-            stage.initOwner(primaryStage);
+            stage.initOwner((Stage)menuBar.getScene().getWindow());
             stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
             stage.setAlwaysOnTop(true);
             stage.setTitle("Create Magazine (Magazine Manager)");
-            Parent root = FXMLLoader.load(getClass().getResource("../view/EditableMainMagazineForm.fxml"));
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/CreateMainMagazineWindow.fxml"));
+            Parent root = loader.load();
+            CreateMainMagazineWindowController cmmwc = loader.getController();
+            
             Scene scene = new Scene(root, 350, 350);
             stage.setScene(scene);
-            stage.showAndWait();   
+            stage.showAndWait();
+            
+            return cmmwc.getMagazineServiceDatabase();
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
         }
+        
+        return null;
     }
     
-    public static void setStage(Stage stage) {
-        MenuBarController.primaryStage = stage;
+    @FXML
+    public void saveDBtoFile() {
+        if(MagazineService.getDBFile() != null) {
+            MagazineService.getDBController().serializeDB(MagazineService.getDBFile());
+            Alert fileAlert = new Alert(Alert.AlertType.INFORMATION);
+            fileAlert.setContentText("File Saved.");
+            fileAlert.showAndWait();
+        }
+    }
+    
+    public void setTreeViewControllerRef(MagazineServiceTreeViewController controller) {
+        this.treeViewControllerRef = controller;
     }
 }

@@ -4,13 +4,14 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  *
  * @author 34085068
  */
-public class MagazineDatabase {
+public class MagazineDatabase implements Serializable {
     private MainMagazine mainMagazine;
     private HashMap<String, SupplementMagazine> supplementMagazines;
     
@@ -26,10 +27,4 @@ public class MagazineDatabase {
     public HashMap<String, SupplementMagazine> getSupplementMagazines() {
         return this.supplementMagazines;
     }
-    
-//    public void createMainMagazine(String title, double weeklyCost) {
-//        if(mainMagazine == null) {
-//            this.mainMagazine = new MainMagazine(title, weeklyCost);
-//        }
-//    }
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" id="borderPane" 
+            prefHeight="350.0" prefWidth="350.0" 
+            fx:controller="magazineservice.controller.CreateMainMagazineWindowController">
+    <center>
+        <fx:include fx:id="mainMagazineForm" source="MainMagazineForm.fxml"/>
+    </center>
+    <bottom>
+        <ButtonBar fx:id="createCancelBar" BorderPane.alignment="BOTTOM_LEFT">
+            <buttons>
+                <Button fx:id="createButton" text="Create" onAction="#onCreateButtonClicked"></Button>
+                <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelButtonClicked"></Button>
+            </buttons>
+            <BorderPane.margin>
+                <Insets bottom="10.0f" left="10.0f" right="10.0f" top="10.0f"/>
+            </BorderPane.margin>
+        </ButtonBar> 
+    </bottom>
+</BorderPane>

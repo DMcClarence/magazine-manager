@@ -50,7 +50,7 @@ public class MagazineDatabaseController {
         return magazines;
     }
     
-//    public void createMainMagazine(String title, double weeklyCost) {
-//        dbRef.createMainMagazine(title, weeklyCost);
-//    }
+    public void addSupplementMagazine(SupplementMagazine supplementMagazine) {
+        dbRef.getSupplementMagazines().put(supplementMagazine.getTitle(), supplementMagazine);
+    }
 }

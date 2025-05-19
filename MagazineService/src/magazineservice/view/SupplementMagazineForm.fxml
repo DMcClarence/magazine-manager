@@ -8,17 +8,19 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane fx:id="editableForm" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="magazineservice.controller.EditableSupplementMagazineFormController">
+      fx:controller="magazineservice.controller.SupplementMagazineFormController">
     <center>
         <VBox fx:id="fieldContainer" spacing="15.0f">
             <children>
                 <HBox fx:id="titleField" spacing="5.0f">
-                    <Label fx:id="titleFieldLabel" text="Title: " alignment="CENTER_LEFT"></Label>
-                    <TextField fx:id="titleFieldTextBox"></TextField>
+                    <Label fx:id="titleFieldLabel" text="Title: " alignment="CENTER_LEFT"></Label>  
+                    <Label fx:id="displayedTitle"></Label>
+                    <TextField fx:id="titleFieldTextBox" managed="false" visible="false"></TextField>
                 </HBox>
                 <HBox fx:id="weeklyCostField" spacing="5.0f">
                     <Label fx:id="weeklyCostFieldLabel" text="Weekly Cost: " alignment="CENTER_LEFT"></Label>
-                    <TextField fx:id="weeklyCostTextField"></TextField>
+                    <Label fx:id="displayedWeeklyCost"></Label>
+                    <TextField fx:id="weeklyCostFieldTextBox" managed="false" visible="false"></TextField>
                 </HBox>
                 <HBox fx:id="typeField" spacing="5.0f">
                     <Label fx:id="typeFieldLabel" text="Type: " alignment="CENTER_LEFT"></Label>

@@ -4,11 +4,13 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author 34085068
  */
-public class MagazineServiceDatabase {
+public class MagazineServiceDatabase implements Serializable {
     private CustomerDatabase customerDB;
     private MagazineDatabase magazineDB;
     

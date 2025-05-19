@@ -8,21 +8,23 @@
 <?import javafx.geometry.Insets?>
 
 <BorderPane fx:id="viewableForm" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="magazineservice.controller.ViewableAssociateCustomerFormController">
+      fx:controller="magazineservice.controller.MainMagazineFormController">
     <center>
         <VBox fx:id="fieldContainer" spacing="15.0f">
             <children>
-                <HBox fx:id="nameField" spacing="5.0f">
-                    <Label fx:id="nameFieldLabel" text="Name: " alignment="CENTER_LEFT"></Label>
-                    <Label fx:id="displayedName"></Label>
+                <HBox fx:id="titleField" spacing="5.0f">
+                    <Label fx:id="titleFieldLabel" text="Title: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedTitle"></Label>
+                    <TextField fx:id="titleFieldTextBox" visible="false" managed="false"></TextField> 
                 </HBox>
-                <HBox fx:id="emailField" spacing="5.0f">
-                    <Label fx:id="emailFieldLabel" text="Email: " alignment="CENTER_LEFT"></Label>
-                    <Label fx:id="displayedEmail"></Label>
+                <HBox fx:id="weeklyCostField" spacing="5.0f">
+                    <Label fx:id="weeklyCostFieldLabel" text="Weekly Cost: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedWeeklyCost"></Label>
+                    <TextField fx:id="weeklyCostFieldTextBox" visible="false" managed="false"></TextField>
                 </HBox>
                 <HBox fx:id="typeField" spacing="5.0f">
                     <Label fx:id="typeFieldLabel" text="Type: " alignment="CENTER_LEFT"></Label>
-                    <Label fx:id="associateType" text="Associate Customer"></Label>
+                    <Label fx:id="mainLabel" text="Main"></Label>
                 </HBox>
             </children>
             <BorderPane.margin>

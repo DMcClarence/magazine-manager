@@ -13,12 +13,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import magazineservice.MagazineService;
+import magazineservice.model.AssociateCustomer;
+import magazineservice.model.CreditCard;
+import magazineservice.model.DirectDebit;
+import magazineservice.model.PayingCustomer;
+import magazineservice.view.EditableForm;
 
 /**
  * FXML Controller class
@@ -35,15 +39,20 @@ public class ViewSceneController implements Initializable {
     @FXML
     private BorderPane formPane;
 
-    @FXML
     private Button editButton;
 
-    @FXML
     private Button deleteButton;
 
-    @FXML
     private ButtonBar editDeleteBar;
     
+    @FXML
+    private MenuBarController menuBarController;
+    
+    @FXML
+    private MagazineServiceTreeViewController treeViewController;
+    
+    private EditableForm formController;
+
     private ButtonBar doneBar;
     
     private Button done;
@@ -54,28 +63,121 @@ public class ViewSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         doneBar = new ButtonBar();
-        done = new Button("Done");
+        done = new Button("Done");      
+        editButton = new Button("Edit");
+        deleteButton = new Button("Delete");
+        editDeleteBar = new ButtonBar();
+        
+        editDeleteBar.getButtons().addAll(editButton, deleteButton);
+        editButton.setOnAction(evt -> { formController.setEditable(true);
+                                        formPane.setBottom(doneBar);
+        });
+        BorderPane.setAlignment(editDeleteBar, Pos.CENTER);
+        BorderPane.setMargin(editDeleteBar, new Insets(10, 10, 10, 10));
 
         doneBar.getButtons().add(done);
-        done.setOnAction(evt -> {try {
-                                    formPane.setCenter(FXMLLoader.load(getClass().getResource("../view/ViewableAssociateCustomerForm.fxml")));
-                                    formPane.setBottom(editDeleteBar);
-                                 }
-                                 catch(IOException ioe) {
-                                    ioe.printStackTrace();
-                                 }}); 
+        done.setOnAction(evt -> { formController.setEditable(false);
+                                  formPane.setBottom(editDeleteBar);
+                                }); 
         BorderPane.setAlignment(doneBar, Pos.CENTER);
         BorderPane.setMargin(doneBar, new Insets(10, 10, 10, 10));
+        
+        treeViewController.getTreeView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null && newValue != oldValue){
+                FXMLLoader loader;
+                if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getMainHeader()) {
+                    try {
+                        loader = new FXMLLoader(getClass().getResource("../view/MainMagazineForm.fxml"));
+                        formPane.setCenter(loader.load());
+                        formPane.setBottom(editDeleteBar);
+                        MainMagazineFormController mmfc;
+                        formController = mmfc = loader.getController();
+                        mmfc.setMainMagazineRef(MagazineService.getDBController().getMainMagazine());
+                        mmfc.setTreeItemRef(treeViewController.getTreeView().getSelectionModel().getSelectedItem());
+                        mmfc.displayData();
+                    }
+                    catch(IOException ioe) {
+                        ioe.printStackTrace();
+                    }
+                }
+                else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
+                    try {
+                        loader = new FXMLLoader(getClass().getResource("../view/SupplementMagazineForm.fxml"));
+                        formPane.setCenter(loader.load());
+                        formPane.setBottom(editDeleteBar);
+                        SupplementMagazineFormController smfc;
+                        formController = smfc = loader.getController();
+                        smfc.setSupplementMagazineRef(MagazineService.getDBController().getSupplementMagazine(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
+                        smfc.setTreeItemRef(treeViewController.getTreeView().getSelectionModel().getSelectedItem());
+                        smfc.displayData();
+                    }
+                    catch(IOException ioe) {
+                        ioe.printStackTrace();
+                    }                   
+                }
+                else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getPayingHeader()) {
+                    try {
+                        loader = new FXMLLoader(getClass().getResource("../view/PayingCustomerForm.fxml"));
+                        formPane.setCenter(loader.load());
+                        formPane.setBottom(editDeleteBar);
+                        PayingCustomerFormController pcfc;
+                        formController = pcfc = loader.getController();
+                        pcfc.setPayingCustomerRef((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
+                        if(((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())).getPaymentMethod() instanceof DirectDebit) {
+                            pcfc.setDirectDebitRef((DirectDebit)((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())).getPaymentMethod());
+                        }
+                        else if(((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())).getPaymentMethod() instanceof CreditCard) {
+                            pcfc.setCreditCardRef((CreditCard)((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())).getPaymentMethod());
+                        }
+                        pcfc.setTreeItemRef(treeViewController.getTreeView().getSelectionModel().getSelectedItem());
+                        pcfc.displayData();
+                    }
+                    catch(IOException ioe) {
+                        ioe.printStackTrace();
+                    }     
+                    catch(ClassCastException cce) {
+                        cce.printStackTrace();
+                    }
+                }
+                else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getAssociatesHeader()) {
+                    try {
+                        loader = new FXMLLoader(getClass().getResource("../view/AssociateCustomerForm.fxml"));
+                        formPane.setCenter(loader.load());
+                        formPane.setBottom(editDeleteBar);
+                        AssociateCustomerFormController acfc;
+                        formController = acfc = loader.getController();
+                        acfc.setAssociateCustomerRef((AssociateCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
+                        acfc.setTreeItemRef(treeViewController.getTreeView().getSelectionModel().getSelectedItem());
+                        acfc.displayData();
+                    }
+                    catch(IOException ioe) {
+                        ioe.printStackTrace();
+                    }  
+                    catch(ClassCastException cce) {
+                        cce.printStackTrace();
+                    }
+                }
+                else {
+                    formPane.setCenter(null);
+                    formPane.setBottom(null);
+                }
+            }
+        });
+        
+        menuBarController.setTreeViewControllerRef(treeViewController);
     }
     
     public void editButtonClicked(ActionEvent e) {
-        try {
-            formPane.setBottom(editDeleteBar);
-            formPane.setCenter(FXMLLoader.load(getClass().getResource("../view/EditableAssociateCustomerForm.fxml")));
-            formPane.setBottom(doneBar);
-        }
-        catch(IOException ioe) {
-            ioe.printStackTrace();
-        }
+        formPane.setBottom(editDeleteBar);
+        setEditable(true);
+        formPane.setBottom(doneBar);
+    }
+    
+    public void setEditable(boolean editable) {
+        formController.setEditable(editable);
+    }
+    
+    public MagazineServiceTreeViewController getTreeViewController() {
+        return this.treeViewController;
     }
 }

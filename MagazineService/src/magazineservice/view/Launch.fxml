@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="borderPane" xmlns:fx="http://javafx.com/fxml/1" prefHeight="350.0" prefWidth="350.0"
+            fx:controller="magazineservice.controller.LaunchController">
+    <center>
+        <VBox fx:id="vbox" alignment="CENTER">
+            <Label fx:id="title" text="Magazine Service Manager" style="-fx-font-size: 16px;"></Label>
+            <HBox fx:id="buttons" alignment="CENTER" spacing="15.0" style="-fx-padding: 20px;">
+                <Button fx:id="createButton" text="Create New Service" onAction="#createNewFile"></Button>
+                <Button fx:id="loadButton" text="Load Existing Service" onAction="#openExistingFile"></Button>
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

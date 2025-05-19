@@ -4,32 +4,63 @@
  */
 package magazineservice;
 
+import java.io.File;
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
-import magazineservice.controller.MenuBarController;
+import magazineservice.controller.LaunchController;
+import magazineservice.controller.MagazineServiceDatabaseController;
+import magazineservice.controller.ViewSceneController;
+import magazineservice.model.MagazineServiceDatabase;
 
 /**
  *
  * @author 34085068
  */
 public class MagazineService extends Application {
-    // private static MagazineServiceDatabase db;
+    private static MagazineServiceDatabase db = null;
+    private static MagazineServiceDatabaseController dbController = null;
+    private static File dbFile = null;
     
     @Override
     public void start(Stage primaryStage) {        
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("view/ViewScene.fxml"));
+            FXMLLoader viewLoader = new FXMLLoader(getClass().getResource("view/ViewScene.fxml"));
+            Parent root = viewLoader.load();
+            ViewSceneController vsc = viewLoader.getController();
             Scene scene = new Scene(root);
             
-                MenuBarController.setStage(primaryStage);
-
             primaryStage.setTitle("Magazine Manager");
             primaryStage.setScene(scene);
+            primaryStage.setOnCloseRequest(e -> {
+                Platform.exit();
+            });
             primaryStage.show();
+            
+            Stage stage = new Stage();
+            stage.initOwner(primaryStage);
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setTitle("Magazine Manager");
+            
+            FXMLLoader launchLoader = new FXMLLoader(getClass().getResource("view/Launch.fxml"));
+            Parent launchRoot = launchLoader.load();
+            LaunchController lc = launchLoader.getController();
+            
+            Scene launch = new Scene(launchRoot);
+            stage.setScene(launch);
+            stage.setOnCloseRequest(e -> {
+                primaryStage.close();
+            });
+            stage.showAndWait();
+            
+            if(db != null) {
+                vsc.getTreeViewController().update();
+            }
         }
         catch(IOException ioe) {
             ioe.printStackTrace();
@@ -43,4 +74,27 @@ public class MagazineService extends Application {
         launch(args);
     }
     
+    public static MagazineServiceDatabase getDatabase() {
+        return MagazineService.db;
+    }
+    
+    public static void setDatabase(MagazineServiceDatabase db) {
+        MagazineService.db = db;
+    }
+    
+    public static MagazineServiceDatabaseController getDBController() {
+        return MagazineService.dbController;
+    }
+    
+    public static void setDBController(MagazineServiceDatabaseController dbController) {
+        MagazineService.dbController = dbController;
+    }
+    
+    public static void setDBFile(File dbFile) {
+        MagazineService.dbFile = dbFile;
+    }
+    
+    public static File getDBFile() {
+        return MagazineService.dbFile;
+    }
 }

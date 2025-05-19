@@ -10,7 +10,7 @@
     <Menu fx:id="fileMenu" text="File">
         <MenuItem fx:id="newServiceOption" text="New Magazine Service" onAction="#CreateNewFile"></MenuItem>
         <MenuItem fx:id="loadServiceOption" text="Load Magazine Service" onAction="#OpenExistingFile"></MenuItem>
-        <MenuItem fx:id="saveServiceOption" text="Save Magazine Service"></MenuItem>
+        <MenuItem fx:id="saveServiceOption" text="Save Magazine Service" onAction="#saveDBtoFile"></MenuItem>
     </Menu>
     <Menu fx:id="createMenu" text="Create">
         <Menu fx:id="customerMenu" text="Customer">
