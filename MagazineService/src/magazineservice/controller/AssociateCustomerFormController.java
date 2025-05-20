@@ -65,6 +65,9 @@ public class AssociateCustomerFormController implements Initializable, EditableF
     @FXML
     private ComboBox<String> benefactorChoices;
     
+    @FXML
+    private SupplementMagazineSelectorController supplementListController;
+    
     private AssociateCustomer associateCustomerRef = null;
     
     private TreeItem<String> treeItemRef = null;
@@ -132,6 +135,8 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         emailFieldTextBox.setVisible(editable);
         
         benefactorChoices.setDisable(!(editable));
+        
+        supplementListController.setEditable(editable);
         
         // Update Label/Text Field with Accurate Data for Selected Customer
         if(editable && associateCustomerRef != null) {

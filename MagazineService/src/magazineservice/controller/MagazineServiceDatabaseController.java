@@ -16,7 +16,6 @@ import magazineservice.model.Magazine;
 import magazineservice.model.MagazineServiceDatabase;
 import magazineservice.model.MainMagazine;
 import magazineservice.model.PayingCustomer;
-import magazineservice.model.PaymentMethod;
 import magazineservice.model.SupplementMagazine;
 
 /**
@@ -111,5 +110,16 @@ public class MagazineServiceDatabaseController {
         }
         
         return dbRef;
-    } 
+    }
+    
+    public void addToSubscription(String title, String email) {
+        if(!customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title))) {
+            customerDBController.getCustomer(email).getSuppMags().add(magazineDBController.getSupplementMagazine(title));
+        }
+        
+    }
+    
+    public void removeFromSubscription(String title, String email) {
+        customerDBController.getCustomer(email).getSuppMags().remove(magazineDBController.getSupplementMagazine(title));
+    }
 }

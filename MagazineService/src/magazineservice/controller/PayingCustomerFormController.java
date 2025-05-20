@@ -10,6 +10,8 @@ import java.time.YearMonth;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -113,6 +115,9 @@ public class PayingCustomerFormController implements Initializable, EditableForm
     @FXML
     private ComboBox<String> selectedYear;
     
+    @FXML
+    private SupplementMagazineSelectorController supplementListController;
+    
     private PayingCustomer payingCustomerRef = null;
     
     private DirectDebit directDebitRef = null;
@@ -120,7 +125,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
     private CreditCard creditCardRef = null;
     
     private TreeItem<String> treeItemRef = null;
-
+    
     /**
      * Initializes the controller class.
      */
@@ -156,7 +161,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                     }
                 }
             }  
-        }); 
+        });
     }
         
     public void setPayingCustomerRef(PayingCustomer payingCustomer) {
@@ -190,9 +195,21 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                System.out.println(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
                selectedYear.getSelectionModel().select(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
             }
-            
         }
-
+        
+        for(Node n : supplementListController.getSupplementListChildren()) {
+            try {
+                if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(((CheckBox)n).getText()))) {
+                    ((CheckBox)n).setSelected(true);
+                }
+                else {
+                    ((CheckBox)n).setSelected(false);
+                }
+            }
+            catch(ClassCastException cce) {
+                    // Not a CheckBox, move on
+            }
+        }
     }
     
     public void updateRefData() {
@@ -204,6 +221,20 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             }
             else if(creditCardRef != null) {
                 payingCustomerRef.setPaymentMethod(creditCardRef);
+            }
+        }
+        
+        for(Node n : supplementListController.getSupplementListChildren()) {
+            try {
+                if(((CheckBox)n).isSelected()) {
+                    MagazineService.getDBController().addToSubscription(((CheckBox)n).getText(), payingCustomerRef.getEmail());
+                }
+                else {
+                    MagazineService.getDBController().removeFromSubscription(((CheckBox)n).getText(), payingCustomerRef.getEmail());
+                }
+            }
+            catch(ClassCastException cce) {
+                // Not a CheckBox, move on
             }
         }
     }
@@ -240,6 +271,8 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         
         paymentMethodChoices.setDisable(!(editable));
         
+        supplementListController.setEditable(editable);
+        
         // Update Label/Text Field with Accurate Data for Selected Customer
         if(editable && payingCustomerRef != null) {
             nameFieldTextBox.setText(payingCustomerRef.getName());
@@ -263,6 +296,20 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                 }
                 catch(ClassCastException cce) {
                     cce.printStackTrace();
+                }
+            }
+            
+            for(Node n : supplementListController.getSupplementListChildren()) {
+                try {
+                    if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(((CheckBox)n).getText()))) {
+                        ((CheckBox)n).setSelected(true);
+                    }
+                    else {
+                        ((CheckBox)n).setSelected(false);
+                    }
+                }
+                catch(ClassCastException cce) {
+                    // Not a CheckBox, move on
                 }
             }
         }
