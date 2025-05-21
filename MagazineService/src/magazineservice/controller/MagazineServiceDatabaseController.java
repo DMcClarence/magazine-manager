@@ -122,4 +122,8 @@ public class MagazineServiceDatabaseController {
     public void removeFromSubscription(String title, String email) {
         customerDBController.getCustomer(email).getSuppMags().remove(magazineDBController.getSupplementMagazine(title));
     }
+    
+    public boolean isSubscribedToSupplement(String email, String title) {
+        return customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title));
+    }
 }

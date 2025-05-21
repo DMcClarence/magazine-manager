@@ -43,7 +43,7 @@ public class ViewSceneController implements Initializable {
 
     private Button deleteButton;
 
-    private ButtonBar editDeleteBar;
+    private ButtonBar editBar;
     
     @FXML
     private MenuBarController menuBarController;
@@ -56,6 +56,8 @@ public class ViewSceneController implements Initializable {
     private ButtonBar doneBar;
     
     private Button done;
+    
+    private ButtonBar deleteBar;
 
     /**
      * Initializes the controller class.
@@ -66,21 +68,28 @@ public class ViewSceneController implements Initializable {
         done = new Button("Done");      
         editButton = new Button("Edit");
         deleteButton = new Button("Delete");
-        editDeleteBar = new ButtonBar();
+        editBar = new ButtonBar();
+        deleteBar = new ButtonBar();
         
-        editDeleteBar.getButtons().addAll(editButton, deleteButton);
-        editButton.setOnAction(evt -> { formController.setEditable(true);
-                                        formPane.setBottom(doneBar);
+        editBar.getButtons().add(editButton);
+        editButton.setOnAction(e -> { formController.setEditable(true);
+                                      formPane.setTop(deleteBar);
+                                      formPane.setBottom(doneBar);
         });
-        BorderPane.setAlignment(editDeleteBar, Pos.CENTER);
-        BorderPane.setMargin(editDeleteBar, new Insets(10, 10, 10, 10));
+        BorderPane.setMargin(editBar, new Insets(2, 10, 10, 10));
+        
+        deleteBar.getButtons().add(deleteButton);
+        deleteButton.setOnAction(e -> { 
+                                        
+        });
+        BorderPane.setMargin(deleteBar, new Insets(10, 10, 5, 10));
 
         doneBar.getButtons().add(done);
-        done.setOnAction(evt -> { formController.setEditable(false);
-                                  formPane.setBottom(editDeleteBar);
-                                }); 
-        BorderPane.setAlignment(doneBar, Pos.CENTER);
-        BorderPane.setMargin(doneBar, new Insets(10, 10, 10, 10));
+        done.setOnAction(e -> { formController.setEditable(false);
+                                formPane.setTop(null);
+                                formPane.setBottom(editBar);
+        }); 
+        BorderPane.setMargin(doneBar, new Insets(2, 10, 10, 10));
         
         treeViewController.getTreeView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null && newValue != oldValue){
@@ -89,7 +98,7 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/MainMagazineForm.fxml"));
                         formPane.setCenter(loader.load());
-                        formPane.setBottom(editDeleteBar);
+                        formPane.setBottom(editBar);
                         MainMagazineFormController mmfc;
                         formController = mmfc = loader.getController();
                         mmfc.setMainMagazineRef(MagazineService.getDBController().getMainMagazine());
@@ -104,7 +113,7 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/SupplementMagazineForm.fxml"));
                         formPane.setCenter(loader.load());
-                        formPane.setBottom(editDeleteBar);
+                        formPane.setBottom(editBar);
                         SupplementMagazineFormController smfc;
                         formController = smfc = loader.getController();
                         smfc.setSupplementMagazineRef(MagazineService.getDBController().getSupplementMagazine(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
@@ -119,7 +128,7 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/PayingCustomerForm.fxml"));
                         formPane.setCenter(loader.load());
-                        formPane.setBottom(editDeleteBar);
+                        formPane.setBottom(editBar);
                         PayingCustomerFormController pcfc;
                         formController = pcfc = loader.getController();
                         pcfc.setPayingCustomerRef((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
@@ -143,7 +152,7 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/AssociateCustomerForm.fxml"));
                         formPane.setCenter(loader.load());
-                        formPane.setBottom(editDeleteBar);
+                        formPane.setBottom(editBar);
                         AssociateCustomerFormController acfc;
                         formController = acfc = loader.getController();
                         acfc.setAssociateCustomerRef((AssociateCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()));
@@ -168,7 +177,7 @@ public class ViewSceneController implements Initializable {
     }
     
     public void editButtonClicked(ActionEvent e) {
-        formPane.setBottom(editDeleteBar);
+        formPane.setBottom(editBar);
         setEditable(true);
         formPane.setBottom(doneBar);
     }
