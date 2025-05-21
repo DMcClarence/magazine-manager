@@ -6,6 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<ScrollPane xmlns:fx="http://javafx.com/fxml/1" fx:id="magazineSelector" fx:controller="magazineservice.controller.SupplementMagazineSelectorController">
-    <VBox fx:id="supplementList" disable="true"></VBox>    
-</ScrollPane>
+<ListView xmlns:fx="http://javafx.com/fxml/1" 
+          prefHeight="200.0" prefWidth="500.0" fx:id="supplementList" 
+          fx:controller="magazineservice.controller.SupplementMagazineSelectorController">
+</ListView>

@@ -7,7 +7,6 @@ package magazineservice.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +14,7 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import magazineservice.MagazineService;
@@ -36,6 +36,8 @@ public class ViewSceneController implements Initializable {
 
     @FXML
     private SplitPane layout;
+    
+    private ScrollPane scrollPane;
 
     @FXML
     private BorderPane formPane;
@@ -71,18 +73,38 @@ public class ViewSceneController implements Initializable {
         deleteButton = new Button("Delete");
         editBar = new ButtonBar();
         deleteBar = new ButtonBar();
+        scrollPane = new ScrollPane();
+        
+        BorderPane.setMargin(scrollPane, new Insets(5, 5, 5, 5));
+        scrollPane.fitToWidthProperty().setValue(Boolean.TRUE);
         
         editBar.getButtons().add(editButton);
         editButton.setOnAction(e -> { 
             formController.setEditable(true);
-            formPane.setTop(deleteBar);
+            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getMainHeader()) {
+                formPane.setTop(null);
+            }
+            else {
+                formPane.setTop(deleteBar);
+            }
             formPane.setBottom(doneBar);
         });
         BorderPane.setMargin(editBar, new Insets(2, 10, 10, 10));
         
         deleteBar.getButtons().add(deleteButton);
-        deleteButton.setOnAction(e -> { 
-            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
+        deleteButton.setOnAction(e -> {
+            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getPayingHeader() ||
+               treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getAssociatesHeader()) {
+                MagazineService.getDBController().removeCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
+                formPane.setTop(null);
+                formPane.setCenter(null);
+                formPane.setBottom(null);
+                formController = null;
+                treeViewController.getTreeView().getSelectionModel().clearSelection();
+                treeViewController.clearTreeView();
+                treeViewController.update();
+            }
+            else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
                 boolean subbed = false;
                 for(Customer c : MagazineService.getDBController().getAllCustomers()) {
                     if(MagazineService.getDBController().isSubscribedToSupplement(c.getEmail(), treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())) {
@@ -122,7 +144,8 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/MainMagazineForm.fxml"));
                         formPane.setTop(null);
-                        formPane.setCenter(loader.load());
+                        scrollPane.setContent(loader.load());
+                        formPane.setCenter(scrollPane);
                         formPane.setBottom(editBar);
                         MainMagazineFormController mmfc;
                         formController = mmfc = loader.getController();
@@ -138,7 +161,8 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/SupplementMagazineForm.fxml"));
                         formPane.setTop(null);
-                        formPane.setCenter(loader.load());
+                        scrollPane.setContent(loader.load());
+                        formPane.setCenter(scrollPane);
                         formPane.setBottom(editBar);
                         SupplementMagazineFormController smfc;
                         formController = smfc = loader.getController();
@@ -154,7 +178,8 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/PayingCustomerForm.fxml"));
                         formPane.setTop(null);
-                        formPane.setCenter(loader.load());
+                        scrollPane.setContent(loader.load());
+                        formPane.setCenter(scrollPane);
                         formPane.setBottom(editBar);
                         PayingCustomerFormController pcfc;
                         formController = pcfc = loader.getController();
@@ -179,7 +204,8 @@ public class ViewSceneController implements Initializable {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/AssociateCustomerForm.fxml"));
                         formPane.setTop(null);
-                        formPane.setCenter(loader.load());
+                        scrollPane.setContent(loader.load());
+                        formPane.setCenter(scrollPane);
                         formPane.setBottom(editBar);
                         AssociateCustomerFormController acfc;
                         formController = acfc = loader.getController();

@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -108,6 +110,15 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             displayedName.setText(associateCustomerRef.getName());
             displayedEmail.setText(associateCustomerRef.getEmail());
             benefactorChoices.getSelectionModel().select(associateCustomerRef.getBenefactor().getEmail());
+            
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(associateCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(cb.getText()))) {
+                    cb.setSelected(true);
+                }
+                else {
+                    cb.setSelected(false);
+                }
+            }
         }
 
     }
@@ -117,6 +128,15 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             associateCustomerRef.setName(nameFieldTextBox.getText());
             associateCustomerRef.setEmail(emailFieldTextBox.getText());
             associateCustomerRef.setBenefactor(benefactorRef);
+            
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(cb.isSelected()) {
+                    MagazineService.getDBController().addToSubscription(cb.getText(), associateCustomerRef.getEmail());
+                }
+                else {
+                    MagazineService.getDBController().removeFromSubscription(cb.getText(), associateCustomerRef.getEmail());
+                }
+            }
         }
     }
     
@@ -143,6 +163,15 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             nameFieldTextBox.setText(associateCustomerRef.getName());
             emailFieldTextBox.setText(associateCustomerRef.getEmail());
             benefactorChoices.getSelectionModel().select(associateCustomerRef.getBenefactor().getEmail());
+            
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(associateCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(cb.getText()))) {
+                    cb.setSelected(true);
+                }
+                else {
+                    cb.setSelected(false);
+                }
+            }
         }
         else if(!(editable) && associateCustomerRef != null) {
             displayedName.setText(nameFieldTextBox.getText());
@@ -160,16 +189,29 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         System.out.println(associateCustomerRef);
     }
     
-    public AssociateCustomer createAssociateCustomer() {
+    public boolean createAssociateCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty()) || 
            (benefactorRef == null)) {
-            return null;
+            return false;
         }
         
-        return new AssociateCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
-                                    MagazineService.getDBController().getMainMagazine(), 
-                                    benefactorRef);
+        AssociateCustomer associateCustomer = new AssociateCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
+                                                                    MagazineService.getDBController().getMainMagazine(), 
+                                                                    benefactorRef);
+        
+        MagazineService.getDBController().addCustomer(associateCustomer);
+        
+        for(CheckBox cb : supplementListController.getSupplementList()) {
+            if(cb.isSelected()) {
+                MagazineService.getDBController().addToSubscription(cb.getText(), associateCustomer.getEmail());
+            }
+            else {
+                MagazineService.getDBController().removeFromSubscription(cb.getText(), associateCustomer.getEmail());
+            }
+        }
+        
+        return true;
     }
     
     public void clearFields() {

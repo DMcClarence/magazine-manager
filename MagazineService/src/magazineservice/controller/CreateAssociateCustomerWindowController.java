@@ -57,7 +57,7 @@ public class CreateAssociateCustomerWindowController implements Initializable {
         currentWindow.close();
     }
     
-    public AssociateCustomer createAssociateCustomer() {        
+    public boolean createAssociateCustomer() {        
         return associateCustomerFormController.createAssociateCustomer();
     }
 }

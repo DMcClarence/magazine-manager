@@ -14,6 +14,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import magazineservice.MagazineService;
 import magazineservice.model.SupplementMagazine;
 import magazineservice.view.EditableForm;
 
@@ -143,14 +144,18 @@ public class SupplementMagazineFormController implements Initializable, Editable
         System.out.println(supplementMagazineRef);
     }
     
-    public SupplementMagazine createSupplementMagazine() {
+    public boolean createSupplementMagazine() {
         if((titleFieldTextBox.getText() == null || titleFieldTextBox.getText().strip().isEmpty()) ||
            (weeklyCostFieldTextBox.getText() == null || weeklyCostFieldTextBox.getText().strip().isEmpty())) {
-            return null;
+            return false;
         }
         
-        return new SupplementMagazine(titleFieldTextBox.getText(), 
-                                            Double.parseDouble(weeklyCostFieldTextBox.getText()));
+        SupplementMagazine supplementMagazine = new SupplementMagazine(titleFieldTextBox.getText(), 
+                                                                        Double.parseDouble(weeklyCostFieldTextBox.getText()));
+        
+        MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
+        
+        return true;
     }
     
     public void clearFields() {

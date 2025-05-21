@@ -9,10 +9,8 @@ import java.util.ResourceBundle;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ListView;
 import magazineservice.MagazineService;
 import magazineservice.model.SupplementMagazine;
 import magazineservice.view.EditableForm;
@@ -24,10 +22,7 @@ import magazineservice.view.EditableForm;
  */
 public class SupplementMagazineSelectorController implements Initializable, EditableForm {
     @FXML
-    private ScrollPane magazineSelector;
-
-    @FXML
-    private VBox supplementList;
+    private ListView<CheckBox> supplementList;
 
     /**
      * Initializes the controller class.
@@ -37,16 +32,20 @@ public class SupplementMagazineSelectorController implements Initializable, Edit
         for(SupplementMagazine sm : MagazineService.getDBController().getAllSupplementMagazines()) {
             CheckBox checkbox = new CheckBox(sm.getTitle());
             checkbox.setStyle("-fx-padding: 5px;");
-            supplementList.getChildren().add(checkbox);
+            supplementList.getItems().add(checkbox);
         }
+        supplementList.setOnScroll(e -> e.consume());
+        setEditable(false);
     }  
     
     @Override
     public void setEditable(boolean editable) {
-        supplementList.setDisable(!(editable));
+        for(CheckBox cb : getSupplementList()) {
+            cb.setDisable(!(editable));
+        }
     }
     
-    public ObservableList<Node> getSupplementListChildren() {
-        return this.supplementList.getChildren();
+    public ObservableList<CheckBox> getSupplementList() {
+        return this.supplementList.getItems();
     }
 }

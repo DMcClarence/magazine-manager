@@ -157,9 +157,8 @@ public class MenuBarController implements Initializable {
             stage.showAndWait();
             
             Alert fileAlert;
-            AssociateCustomer associateCustomer = cacwc.createAssociateCustomer();
-            if(associateCustomer != null) {
-                MagazineService.getDBController().addCustomer(associateCustomer);
+            boolean success = cacwc.createAssociateCustomer();
+            if(success) {
                 treeViewControllerRef.clearTreeView();
                 treeViewControllerRef.update();
                 fileAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -195,9 +194,8 @@ public class MenuBarController implements Initializable {
             stage.showAndWait();
             
             Alert fileAlert;
-            PayingCustomer payingCustomer = cpcwc.createPayingCustomer();
-            if(payingCustomer != null) {
-                MagazineService.getDBController().addCustomer(payingCustomer);
+            boolean success = cpcwc.createPayingCustomer();
+            if(success) {
                 treeViewControllerRef.clearTreeView();
                 treeViewControllerRef.update();
                 fileAlert = new Alert(Alert.AlertType.INFORMATION);
@@ -233,9 +231,8 @@ public class MenuBarController implements Initializable {
             stage.showAndWait();
             
             Alert fileAlert;
-            SupplementMagazine supplementMagazine = csmwc.createSupplementMagazine();
-            if(supplementMagazine != null) {
-                MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
+            boolean success = csmwc.createSupplementMagazine();
+            if(success) {
                 treeViewControllerRef.clearTreeView();
                 treeViewControllerRef.update();
                 fileAlert = new Alert(Alert.AlertType.INFORMATION);

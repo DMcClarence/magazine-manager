@@ -5,6 +5,7 @@
 package magazineservice.controller;
 
 import java.util.ArrayList;
+import magazineservice.model.AssociateCustomer;
 import magazineservice.model.Customer;
 import magazineservice.model.CustomerDatabase;
 import magazineservice.model.PayingCustomer;
@@ -26,9 +27,32 @@ public class CustomerDatabaseController {
     
     public void addCustomer(Customer customer) {
         dbRef.getDatabase().put(customer.getEmail(), customer);
+        
+        if(customer instanceof AssociateCustomer) {
+            try {
+                payingCustomerController.addAssociateCustomer(((AssociateCustomer)customer).getBenefactor(), (AssociateCustomer)customer);
+            }
+            catch(ClassCastException cce) {
+                cce.printStackTrace();
+            }
+        }
     }
     
     public void removeCustomer(String email) {
+        try {
+            if(dbRef.getDatabase().get(email) instanceof PayingCustomer) {
+                for(AssociateCustomer ac : ((PayingCustomer)dbRef.getDatabase().get(email)).getAssociates()) {
+                    removeCustomer(ac.getEmail());
+                }
+            }
+            else if(dbRef.getDatabase().get(email) instanceof AssociateCustomer) {
+                payingCustomerController.removeAssociateCustomer(((AssociateCustomer)dbRef.getDatabase().get(email)).getBenefactor(), (AssociateCustomer)dbRef.getDatabase().get(email));
+            }
+        }
+        catch(ClassCastException cce) {
+            cce.printStackTrace();
+        }
+
         dbRef.getDatabase().remove(email);
     }
     

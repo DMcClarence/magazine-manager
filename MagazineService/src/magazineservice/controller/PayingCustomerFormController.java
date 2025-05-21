@@ -195,19 +195,14 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                System.out.println(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
                selectedYear.getSelectionModel().select(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
             }
-        }
-        
-        for(Node n : supplementListController.getSupplementListChildren()) {
-            try {
-                if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(((CheckBox)n).getText()))) {
-                    ((CheckBox)n).setSelected(true);
+            
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(cb.getText()))) {
+                    cb.setSelected(true);
                 }
                 else {
-                    ((CheckBox)n).setSelected(false);
+                    cb.setSelected(false);
                 }
-            }
-            catch(ClassCastException cce) {
-                    // Not a CheckBox, move on
             }
         }
     }
@@ -222,20 +217,15 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             else if(creditCardRef != null) {
                 payingCustomerRef.setPaymentMethod(creditCardRef);
             }
+            
+        for(CheckBox cb: supplementListController.getSupplementList()) {
+            if(cb.isSelected()) {
+                MagazineService.getDBController().addToSubscription(cb.getText(), payingCustomerRef.getEmail());
+            }
+            else {
+                MagazineService.getDBController().removeFromSubscription(cb.getText(), payingCustomerRef.getEmail());
+            }
         }
-        
-        for(Node n : supplementListController.getSupplementListChildren()) {
-            try {
-                if(((CheckBox)n).isSelected()) {
-                    MagazineService.getDBController().addToSubscription(((CheckBox)n).getText(), payingCustomerRef.getEmail());
-                }
-                else {
-                    MagazineService.getDBController().removeFromSubscription(((CheckBox)n).getText(), payingCustomerRef.getEmail());
-                }
-            }
-            catch(ClassCastException cce) {
-                // Not a CheckBox, move on
-            }
         }
     }
     
@@ -299,17 +289,12 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                 }
             }
             
-            for(Node n : supplementListController.getSupplementListChildren()) {
-                try {
-                    if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(((CheckBox)n).getText()))) {
-                        ((CheckBox)n).setSelected(true);
-                    }
-                    else {
-                        ((CheckBox)n).setSelected(false);
-                    }
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(payingCustomerRef.getSuppMags().contains(MagazineService.getDBController().getSupplementMagazine(cb.getText()))) {
+                    cb.setSelected(true);
                 }
-                catch(ClassCastException cce) {
-                    // Not a CheckBox, move on
+                else {
+                    cb.setSelected(false);
                 }
             }
         }
@@ -336,10 +321,10 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         System.out.println(payingCustomerRef);
     }
     
-    public PayingCustomer createPayingCustomer() {
+    public boolean createPayingCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty())) {
-            return null;
+            return false;
         }
         
         if(accountNumberFieldTextBox.getText() != null && !accountNumberFieldTextBox.getText().strip().isEmpty()) {
@@ -356,7 +341,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             directDebitRef = null;
         }
         else {
-            return null;
+            return false;
         }
         
         PayingCustomer payingCustomer = null;
@@ -371,7 +356,18 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                                                 creditCardRef);
         }
         
-        return payingCustomer;
+        MagazineService.getDBController().addCustomer(payingCustomer);
+        
+        for(CheckBox cb: supplementListController.getSupplementList()) {
+            if(cb.isSelected()) {
+                MagazineService.getDBController().addToSubscription(cb.getText(), payingCustomer.getEmail());
+            }
+            else {
+                MagazineService.getDBController().removeFromSubscription(cb.getText(), payingCustomer.getEmail());
+            }
+        }
+        
+        return true;
     }
     
     public void clearFields() {

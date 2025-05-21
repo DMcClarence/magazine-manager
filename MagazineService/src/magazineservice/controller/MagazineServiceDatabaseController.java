@@ -130,4 +130,6 @@ public class MagazineServiceDatabaseController {
     public boolean isSubscribedToSupplement(String email, String title) {
         return customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title));
     }
+    
+    
 }
