@@ -121,6 +121,7 @@ public class ViewSceneController implements Initializable {
                 if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getMainHeader()) {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/MainMagazineForm.fxml"));
+                        formPane.setTop(null);
                         formPane.setCenter(loader.load());
                         formPane.setBottom(editBar);
                         MainMagazineFormController mmfc;
@@ -136,6 +137,7 @@ public class ViewSceneController implements Initializable {
                 else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/SupplementMagazineForm.fxml"));
+                        formPane.setTop(null);
                         formPane.setCenter(loader.load());
                         formPane.setBottom(editBar);
                         SupplementMagazineFormController smfc;
@@ -151,6 +153,7 @@ public class ViewSceneController implements Initializable {
                 else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getPayingHeader()) {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/PayingCustomerForm.fxml"));
+                        formPane.setTop(null);
                         formPane.setCenter(loader.load());
                         formPane.setBottom(editBar);
                         PayingCustomerFormController pcfc;
@@ -175,6 +178,7 @@ public class ViewSceneController implements Initializable {
                 else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getAssociatesHeader()) {
                     try {
                         loader = new FXMLLoader(getClass().getResource("../view/AssociateCustomerForm.fxml"));
+                        formPane.setTop(null);
                         formPane.setCenter(loader.load());
                         formPane.setBottom(editBar);
                         AssociateCustomerFormController acfc;
@@ -191,6 +195,7 @@ public class ViewSceneController implements Initializable {
                     }
                 }
                 else {
+                    formPane.setTop(null);
                     formPane.setCenter(null);
                     formPane.setBottom(null);
                 }
@@ -198,12 +203,6 @@ public class ViewSceneController implements Initializable {
         });
         
         menuBarController.setTreeViewControllerRef(treeViewController);
-    }
-    
-    public void editButtonClicked(ActionEvent e) {
-        formPane.setBottom(editBar);
-        setEditable(true);
-        formPane.setBottom(doneBar);
     }
     
     public void setEditable(boolean editable) {
