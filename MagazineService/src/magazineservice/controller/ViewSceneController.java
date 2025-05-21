@@ -12,7 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.SplitPane;
@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import magazineservice.MagazineService;
 import magazineservice.model.AssociateCustomer;
 import magazineservice.model.CreditCard;
+import magazineservice.model.Customer;
 import magazineservice.model.DirectDebit;
 import magazineservice.model.PayingCustomer;
 import magazineservice.view.EditableForm;
@@ -72,22 +73,45 @@ public class ViewSceneController implements Initializable {
         deleteBar = new ButtonBar();
         
         editBar.getButtons().add(editButton);
-        editButton.setOnAction(e -> { formController.setEditable(true);
-                                      formPane.setTop(deleteBar);
-                                      formPane.setBottom(doneBar);
+        editButton.setOnAction(e -> { 
+            formController.setEditable(true);
+            formPane.setTop(deleteBar);
+            formPane.setBottom(doneBar);
         });
         BorderPane.setMargin(editBar, new Insets(2, 10, 10, 10));
         
         deleteBar.getButtons().add(deleteButton);
         deleteButton.setOnAction(e -> { 
-                                        
+            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
+                boolean subbed = false;
+                for(Customer c : MagazineService.getDBController().getAllCustomers()) {
+                    if(MagazineService.getDBController().isSubscribedToSupplement(c.getEmail(), treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())) {
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("Can't Delete Supplement while there are Customers Subscribed");
+                        alert.showAndWait();
+                        subbed = true;
+                        break;
+                    }
+                }
+                if(!subbed) {
+                    MagazineService.getDBController().removeSupplementMagazine(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
+                    formPane.setTop(null);
+                    formPane.setCenter(null);
+                    formPane.setBottom(null);
+                    formController = null;
+                    treeViewController.getTreeView().getSelectionModel().clearSelection();
+                    treeViewController.clearTreeView();
+                    treeViewController.update();
+                }
+            }
         });
         BorderPane.setMargin(deleteBar, new Insets(10, 10, 5, 10));
 
         doneBar.getButtons().add(done);
-        done.setOnAction(e -> { formController.setEditable(false);
-                                formPane.setTop(null);
-                                formPane.setBottom(editBar);
+        done.setOnAction(e -> { 
+            formController.setEditable(false);
+            formPane.setTop(null);
+            formPane.setBottom(editBar);
         }); 
         BorderPane.setMargin(doneBar, new Insets(2, 10, 10, 10));
         

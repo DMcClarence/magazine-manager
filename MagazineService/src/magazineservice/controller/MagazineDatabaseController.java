@@ -53,4 +53,8 @@ public class MagazineDatabaseController {
     public void addSupplementMagazine(SupplementMagazine supplementMagazine) {
         dbRef.getSupplementMagazines().put(supplementMagazine.getTitle(), supplementMagazine);
     }
+    
+    public void removeSupplementMagazine(String title) {
+        dbRef.getSupplementMagazines().remove(title);
+    }
 }

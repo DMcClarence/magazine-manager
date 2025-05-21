@@ -45,6 +45,10 @@ public class MagazineServiceDatabaseController {
         magazineDBController.addSupplementMagazine(supplementMagazine);
     }
     
+    public void removeSupplementMagazine(String title) {
+        magazineDBController.removeSupplementMagazine(title);
+    }
+    
     public void removeCustomer(String email) {
         customerDBController.removeCustomer(email);
     }
