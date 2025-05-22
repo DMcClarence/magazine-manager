@@ -26,6 +26,10 @@
                     <Label fx:id="typeFieldLabel" text="Type: " alignment="CENTER_LEFT"></Label>
                     <Label fx:id="supplementLabel" text="Supplement"></Label>
                 </HBox>
+                <HBox fx:id="numOfSubsField" spacing="5.0f">
+                    <Label fx:id="numOfSubsFieldLabel" text="Subscribed Customers: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedCount" text="0"></Label>
+                </HBox>
             </children>
             <BorderPane.margin>
                 <Insets bottom="10.0f" left="10.0f" right="10.0f" top="10.0f" />

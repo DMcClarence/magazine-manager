@@ -8,17 +8,25 @@
 
 <MenuBar fx:id="menuBar" xmlns:fx="http://javafx.com/fxml/1" fx:controller="magazineservice.controller.MenuBarController">
     <Menu fx:id="fileMenu" text="File">
-        <MenuItem fx:id="newServiceOption" text="New Magazine Service" onAction="#CreateNewFile"></MenuItem>
-        <MenuItem fx:id="loadServiceOption" text="Load Magazine Service" onAction="#OpenExistingFile"></MenuItem>
+        <MenuItem fx:id="newServiceOption" text="New Magazine Service" onAction="#createNewFile"></MenuItem>
+        <MenuItem fx:id="loadServiceOption" text="Load Magazine Service" onAction="#openExistingFile"></MenuItem>
         <MenuItem fx:id="saveServiceOption" text="Save Magazine Service" onAction="#saveDBtoFile"></MenuItem>
     </Menu>
     <Menu fx:id="createMenu" text="Create">
         <Menu fx:id="customerMenu" text="Customer">
-            <MenuItem fx:id="associateOption" text="Associate" onAction="#OpenCreateAssociateCustomerWindow"></MenuItem>
-            <MenuItem fx:id="payingOption" text="Paying" onAction="#OpenCreatePayingCustomerWindow"></MenuItem>
+            <MenuItem fx:id="associateOption" text="Associate" onAction="#openCreateAssociateCustomerWindow"></MenuItem>
+            <MenuItem fx:id="payingOption" text="Paying" onAction="#openCreatePayingCustomerWindow"></MenuItem>
         </Menu>
         <Menu fx:id="magazineMenu" text="Magazine">
-            <MenuItem fx:id="supplementOption" text="Supplement" onAction="#OpenCreateSupplementMagazineWindow"></MenuItem> 
+            <MenuItem fx:id="supplementOption" text="Supplement" onAction="#openCreateSupplementMagazineWindow"></MenuItem> 
         </Menu>
+    </Menu>
+    <Menu fx:id="emailsMenu" text="Emails">
+        <Menu fx:id="generateOption" text="Generate">
+            <Menu fx:id="billingMenu" text="Billing">
+                <MenuItem fx:id="nextMonthOption" text="Next Month" onAction="#generateMonthlyEmails"></MenuItem>
+            </Menu>
+        </Menu>
+        <MenuItem fx:id="historyOption" text="View Billing History" onAction="#showBillingInformationWindow"></MenuItem>
     </Menu>
 </MenuBar>

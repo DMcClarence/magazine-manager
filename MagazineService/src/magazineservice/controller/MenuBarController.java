@@ -7,6 +7,7 @@ package magazineservice.controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.YearMonth;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,10 +25,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import magazineservice.MagazineService;
-import magazineservice.model.AssociateCustomer;
 import magazineservice.model.MagazineServiceDatabase;
 import magazineservice.model.PayingCustomer;
-import magazineservice.model.SupplementMagazine;
+import magazineservice.service.PaymentEmailGenerator;
 
 /**
  * FXML Controller class
@@ -78,7 +78,7 @@ public class MenuBarController implements Initializable {
     }
     
     @FXML
-    public void CreateNewFile(ActionEvent e) {
+    public void createNewFile(ActionEvent e) {
         Alert fileAlert;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File((System.getProperty("user.dir") + "/magazine-services")));
@@ -89,7 +89,7 @@ public class MenuBarController implements Initializable {
             MagazineService.getDBFile().setWritable(true);
             
             try {
-                MagazineService.setDatabase(this.OpenCreateMainMagazineWindow());
+                MagazineService.setDatabase(this.openCreateMainMagazineWindow());
                 
                 if(MagazineService.getDatabase() != null) {
                     MagazineService.setDBController(new MagazineServiceDatabaseController(MagazineService.getDatabase()));
@@ -114,7 +114,7 @@ public class MenuBarController implements Initializable {
     }
     
     @FXML
-    public void OpenExistingFile(ActionEvent e) {
+    public void openExistingFile(ActionEvent e) {
         Alert fileAlert;
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File((System.getProperty("user.dir") + "/magazine-services")));
@@ -140,7 +140,7 @@ public class MenuBarController implements Initializable {
     }
     
     @FXML
-    public void OpenCreateAssociateCustomerWindow(ActionEvent e) {
+    public void openCreateAssociateCustomerWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
             stage.initOwner((Stage)menuBar.getScene().getWindow());
@@ -177,7 +177,7 @@ public class MenuBarController implements Initializable {
     }
     
     @FXML
-    public void OpenCreatePayingCustomerWindow(ActionEvent e) {
+    public void openCreatePayingCustomerWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
             stage.initOwner((Stage)menuBar.getScene().getWindow());
@@ -214,7 +214,7 @@ public class MenuBarController implements Initializable {
     }
     
     @FXML
-    public void OpenCreateSupplementMagazineWindow(ActionEvent e) {
+    public void openCreateSupplementMagazineWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
             stage.initOwner((Stage)menuBar.getScene().getWindow());
@@ -250,7 +250,7 @@ public class MenuBarController implements Initializable {
         }
     }
     
-    public MagazineServiceDatabase OpenCreateMainMagazineWindow() {
+    public MagazineServiceDatabase openCreateMainMagazineWindow() {
         try {
             Stage stage = new Stage();
             stage.initOwner((Stage)menuBar.getScene().getWindow());
@@ -276,6 +276,28 @@ public class MenuBarController implements Initializable {
         return null;
     }
     
+    public void showBillingInformationWindow(ActionEvent e) {
+        try {
+            Stage stage = new Stage();
+            stage.initOwner((Stage)menuBar.getScene().getWindow());
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.DECORATED);
+            stage.setAlwaysOnTop(true);
+            stage.setTitle("Billing Emails (Magazine Manager)");
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/BillingEmailWindow.fxml"));
+            Parent root = loader.load();
+            BillingEmailWindowController bewc = loader.getController();
+            
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.showAndWait();
+        }
+        catch(IOException ioe) {
+            
+        }
+    }
+            
     @FXML
     public void saveDBtoFile() {
         if(MagazineService.getDBFile() != null) {
@@ -288,5 +310,22 @@ public class MenuBarController implements Initializable {
     
     public void setTreeViewControllerRef(MagazineServiceTreeViewController controller) {
         this.treeViewControllerRef = controller;
+    }
+    
+    @FXML
+    public void generateMonthlyEmails() {
+        YearMonth nextMonth = YearMonth.now().plusMonths(1);
+        PaymentEmailGenerator peg = new PaymentEmailGenerator();
+        peg.setPeriod(nextMonth);
+        
+        for(PayingCustomer pc : MagazineService.getDBController().getAllPayingCustomers()) {
+            peg.setRecipient(pc);
+            MagazineService.getDBController().saveEmail(pc.getEmail(), nextMonth, peg.generate());
+            peg.setRecipient(null);
+        }
+        
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText("Emails Generated");
+        alert.showAndWait();
     }
 }

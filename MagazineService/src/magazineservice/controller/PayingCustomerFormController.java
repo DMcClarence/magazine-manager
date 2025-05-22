@@ -10,16 +10,17 @@ import java.time.YearMonth;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import magazineservice.MagazineService;
+import magazineservice.model.AssociateCustomer;
 import magazineservice.model.CreditCard;
 import magazineservice.model.DirectDebit;
 import magazineservice.model.PayingCustomer;
@@ -31,6 +32,8 @@ import magazineservice.view.EditableForm;
  * @author 34085068
  */
 public class PayingCustomerFormController implements Initializable, EditableForm {
+    private final int NO_OF_EXPIRY_YEARS = 20; // 20 is Arbitrary. No Expiry will be more than 20 years in the future.
+    
     @FXML
     private BorderPane viewableForm;
     
@@ -116,6 +119,12 @@ public class PayingCustomerFormController implements Initializable, EditableForm
     private ComboBox<String> selectedYear;
     
     @FXML
+    private Label associatesLabel;
+    
+    @FXML 
+    private ListView<String> associatesList;
+    
+    @FXML
     private SupplementMagazineSelectorController supplementListController;
     
     private PayingCustomer payingCustomerRef = null;
@@ -134,7 +143,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         paymentMethodChoices.getItems().addAll("Direct Debit", "Credit Card");
         selectedMonth.getItems().addAll("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12");
         int currentYear = Year.now().getValue();
-        for(int i = currentYear; i < currentYear + 20; i++) { // 20 is Arbitrary. No Expiry will be more than 20 years in the future.
+        for(int i = currentYear; i < currentYear + NO_OF_EXPIRY_YEARS; i++) { 
             selectedYear.getItems().add(Integer.toString(i));
         }
         
@@ -162,6 +171,8 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                 }
             }  
         });
+        
+        associatesList.setOnScroll(e -> e.consume());
     }
         
     public void setPayingCustomerRef(PayingCustomer payingCustomer) {
@@ -192,8 +203,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                paymentMethodChoices.getSelectionModel().select(1);
                displayedCardNumber.setText(creditCardRef.getCardNumber());
                selectedMonth.getSelectionModel().select((creditCardRef.getExpiry().getMonthValue() - 1));
-               System.out.println(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
-               selectedYear.getSelectionModel().select(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
+               selectedYear.getSelectionModel().select((NO_OF_EXPIRY_YEARS - 1) - ((Year.now().getValue() + (NO_OF_EXPIRY_YEARS - 1)) - creditCardRef.getExpiry().getYear()));
             }
             
             for(CheckBox cb : supplementListController.getSupplementList()) {
@@ -204,6 +214,23 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                     cb.setSelected(false);
                 }
             }
+            
+            if(payingCustomerRef.getAssociates().isEmpty()) {
+                associatesLabel.setVisible(false);
+                associatesLabel.setManaged(false);
+                associatesList.setManaged(false);
+                associatesList.setVisible(false);
+            }
+            else {
+                associatesLabel.setVisible(true);
+                associatesLabel.setManaged(true);
+                associatesList.setManaged(true);
+                associatesList.setVisible(true);
+                
+                for(AssociateCustomer ac : payingCustomerRef.getAssociates()) {
+                    associatesList.getItems().add(ac.getEmail());
+                }
+            }     
         }
     }
     
@@ -218,14 +245,14 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                 payingCustomerRef.setPaymentMethod(creditCardRef);
             }
             
-        for(CheckBox cb: supplementListController.getSupplementList()) {
-            if(cb.isSelected()) {
-                MagazineService.getDBController().addToSubscription(cb.getText(), payingCustomerRef.getEmail());
+            for(CheckBox cb: supplementListController.getSupplementList()) {
+                if(cb.isSelected()) {
+                    MagazineService.getDBController().addToSubscription(cb.getText(), payingCustomerRef.getEmail());
+                }
+                else {
+                    MagazineService.getDBController().removeFromSubscription(cb.getText(), payingCustomerRef.getEmail());
+                }
             }
-            else {
-                MagazineService.getDBController().removeFromSubscription(cb.getText(), payingCustomerRef.getEmail());
-            }
-        }
         }
     }
     
@@ -281,8 +308,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                     creditCardRef = (CreditCard)payingCustomerRef.getPaymentMethod();
                     cardNumberFieldTextBox.setText(creditCardRef.getCardNumber());
                     selectedMonth.getSelectionModel().select((creditCardRef.getExpiry().getMonthValue() - 1));
-                    System.out.println(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
-                    selectedYear.getSelectionModel().select(19 - ((Year.now().getValue() + 19) - creditCardRef.getExpiry().getYear()));
+                    selectedYear.getSelectionModel().select((NO_OF_EXPIRY_YEARS - 1) - ((Year.now().getValue() + (NO_OF_EXPIRY_YEARS - 1)) - creditCardRef.getExpiry().getYear()));
                 }
                 catch(ClassCastException cce) {
                     cce.printStackTrace();

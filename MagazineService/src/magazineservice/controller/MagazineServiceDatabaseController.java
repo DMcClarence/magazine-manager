@@ -10,7 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import magazineservice.model.Customer;
 import magazineservice.model.Magazine;
 import magazineservice.model.MagazineServiceDatabase;
@@ -43,13 +45,21 @@ public class MagazineServiceDatabaseController {
     
     public void addSupplementMagazine(SupplementMagazine supplementMagazine) {
         magazineDBController.addSupplementMagazine(supplementMagazine);
+        dbRef.getSupplementSubCounts().put(supplementMagazine.getTitle(), 0);
     }
     
     public void removeSupplementMagazine(String title) {
         magazineDBController.removeSupplementMagazine(title);
+        if(dbRef.getSupplementSubCounts().get(title) <= 0) {
+            dbRef.getSupplementSubCounts().remove(title);
+        }
     }
     
     public void removeCustomer(String email) {
+        ArrayList<SupplementMagazine> temp = new ArrayList<SupplementMagazine>(customerDBController.getCustomer(email).getSuppMags());
+        for(SupplementMagazine sm : temp) {
+            removeFromSubscription(sm.getTitle(), email);
+        }
         customerDBController.removeCustomer(email);
     }
     
@@ -119,17 +129,36 @@ public class MagazineServiceDatabaseController {
     public void addToSubscription(String title, String email) {
         if(!customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title))) {
             customerDBController.getCustomer(email).getSuppMags().add(magazineDBController.getSupplementMagazine(title));
+            dbRef.getSupplementSubCounts().replace(title, dbRef.getSupplementSubCounts().get(title) + 1);
         }
-        
+
     }
     
     public void removeFromSubscription(String title, String email) {
-        customerDBController.getCustomer(email).getSuppMags().remove(magazineDBController.getSupplementMagazine(title));
+        if(customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title))) {
+            customerDBController.getCustomer(email).getSuppMags().remove(magazineDBController.getSupplementMagazine(title));
+            dbRef.getSupplementSubCounts().replace(title, dbRef.getSupplementSubCounts().get(title) - 1);
+        }
     }
     
     public boolean isSubscribedToSupplement(String email, String title) {
         return customerDBController.getCustomer(email).getSuppMags().contains(magazineDBController.getSupplementMagazine(title));
     }
     
+    public int getNumOfSubbedCustomers(String title) {
+        return dbRef.getSupplementSubCounts().get(title);
+    }
     
+    public void saveEmail(String email, YearMonth nextMonth, String emailBody) {
+        if(!dbRef.getEmailDatabase().containsKey(email)) {
+            dbRef.getEmailDatabase().put(email, new HashMap<YearMonth, String>());
+        }
+        
+        HashMap<YearMonth, String> temp = dbRef.getEmailDatabase().get(email);
+        temp.put(nextMonth, emailBody);
+    }
+    
+    public HashMap<YearMonth, String> getBillingHistoryForCustomer(String email) {
+        return dbRef.getEmailDatabase().get(email);
+    }
 }

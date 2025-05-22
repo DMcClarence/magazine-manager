@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane id="splitPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" 
+           fx:controller="magazineservice.controller.BillingEmailWindowController"
+           dividerPositions="0.3f">
+    <TreeView fx:id="treeView" showRoot="false" editable="true">
+        <TreeItem fx:id="root">
+            <children>
+                <TreeItem fx:id="customersHeader">
+                    <value>Customers</value>
+                    <children>
+                        
+                    </children>
+                </TreeItem>
+            </children>
+        </TreeItem>
+    </TreeView>
+    <ScrollPane fx:id="scrollPane">
+        <Label fx:id="billingEmail"></Label>
+    </ScrollPane>
+</SplitPane>

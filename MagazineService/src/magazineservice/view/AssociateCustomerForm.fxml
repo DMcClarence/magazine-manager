@@ -30,7 +30,10 @@
                     <Label fx:id="benefactorFieldLabel" text="Benefactor Email: " alignment="CENTER_LEFT"></Label>
                     <ComboBox fx:id="benefactorChoices" disable="true"></ComboBox>
                 </HBox>
-                <fx:include fx:id="supplementList" source="SupplementMagazineSelector.fxml"/>
+                <VBox>
+                    <Label text="Supplements: "></Label>
+                    <fx:include fx:id="supplementList" source="SupplementMagazineSelector.fxml"/>
+                </VBox>
             </children>
             <BorderPane.margin>
                 <Insets bottom="10.0f" left="10.0f" right="10.0f" top="10.0f" />

@@ -48,4 +48,9 @@ public class SupplementMagazineSelectorController implements Initializable, Edit
     public ObservableList<CheckBox> getSupplementList() {
         return this.supplementList.getItems();
     }
+    
+    public void setHidden(boolean hidden) {
+        supplementList.setManaged(!(hidden));
+        supplementList.setVisible(!(hidden));
+    }
 }

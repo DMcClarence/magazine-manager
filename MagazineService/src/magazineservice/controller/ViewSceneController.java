@@ -138,7 +138,7 @@ public class ViewSceneController implements Initializable {
         BorderPane.setMargin(doneBar, new Insets(2, 10, 10, 10));
         
         treeViewController.getTreeView().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
+            if(newValue != null && newValue != oldValue) {
                 FXMLLoader loader;
                 if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getMainHeader()) {
                     try {

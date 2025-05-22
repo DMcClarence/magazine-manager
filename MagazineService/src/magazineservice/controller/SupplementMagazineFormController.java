@@ -63,6 +63,15 @@ public class SupplementMagazineFormController implements Initializable, Editable
     @FXML
     private Label supplementLabel;
     
+    @FXML
+    private HBox numOfSubsField;
+    
+    @FXML
+    private Label numOfSubsFieldLabel;
+    
+    @FXML
+    private Label displayedCount;
+    
     private SupplementMagazine supplementMagazineRef = null;
     private TreeItem<String> treeItemRef = null;
     
@@ -113,7 +122,8 @@ public class SupplementMagazineFormController implements Initializable, Editable
     public void displayData() {
         if(supplementMagazineRef != null) {
             displayedTitle.setText(supplementMagazineRef.getTitle());
-            displayedWeeklyCost.setText(Double.toString(supplementMagazineRef.getWeeklyCost()));           
+            displayedWeeklyCost.setText(Double.toString(supplementMagazineRef.getWeeklyCost()));  
+            displayedCount.setText(Integer.toString(MagazineService.getDBController().getNumOfSubbedCustomers(supplementMagazineRef.getTitle())));
         }
 
     }
