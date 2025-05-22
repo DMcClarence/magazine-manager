@@ -55,9 +55,28 @@ public class BillingEmailWindowController implements Initializable {
                 }
             }
             
-            treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue != null && newValue != oldValue) {
+//            treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//                if(newValue != null && newValue != oldValue) {
+//                    try {
+//                        if(temp.containsKey(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue()))) {
+//                            billingEmail.setText(temp.get(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue())));
+//                        }
+//                        else {
+//                            billingEmail.setText(null);
+//                        }
+//                    }
+//                    catch(DateTimeParseException dtpe) {
+//                        billingEmail.setText(null);
+//                    }
+//                }
+//            });
+        }
+        
+        treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null && newValue != oldValue) {
+                if(treeView.getSelectionModel().getSelectedItem().isLeaf()) {
                     try {
+                        HashMap<YearMonth, String> temp = MagazineService.getDBController().getBillingHistoryForCustomer(treeView.getSelectionModel().getSelectedItem().getParent().getValue());
                         if(temp.containsKey(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue()))) {
                             billingEmail.setText(temp.get(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue())));
                         }
@@ -69,7 +88,8 @@ public class BillingEmailWindowController implements Initializable {
                         billingEmail.setText(null);
                     }
                 }
-            });
-        }
+
+            }
+        });
     }   
 }

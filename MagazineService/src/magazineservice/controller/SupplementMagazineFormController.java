@@ -154,10 +154,15 @@ public class SupplementMagazineFormController implements Initializable, Editable
         System.out.println(supplementMagazineRef);
     }
     
-    public boolean createSupplementMagazine() {
+    public int createSupplementMagazine() {
         if((titleFieldTextBox.getText() == null || titleFieldTextBox.getText().strip().isEmpty()) ||
            (weeklyCostFieldTextBox.getText() == null || weeklyCostFieldTextBox.getText().strip().isEmpty())) {
-            return false;
+            return 1;
+        }
+        
+        if(MagazineService.getDBController().getSupplementMagazine(titleFieldTextBox.getText()) != null ||
+                titleFieldTextBox.getText().matches(MagazineService.getDBController().getMainMagazine().getTitle())) {
+            return 2;
         }
         
         SupplementMagazine supplementMagazine = new SupplementMagazine(titleFieldTextBox.getText(), 
@@ -165,7 +170,7 @@ public class SupplementMagazineFormController implements Initializable, Editable
         
         MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
         
-        return true;
+        return 0;
     }
     
     public void clearFields() {

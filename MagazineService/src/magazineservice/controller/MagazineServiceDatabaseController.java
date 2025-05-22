@@ -60,6 +60,7 @@ public class MagazineServiceDatabaseController {
         for(SupplementMagazine sm : temp) {
             removeFromSubscription(sm.getTitle(), email);
         }
+        dbRef.getEmailDatabase().remove(email);
         customerDBController.removeCustomer(email);
     }
     

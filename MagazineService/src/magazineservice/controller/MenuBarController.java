@@ -156,17 +156,28 @@ public class MenuBarController implements Initializable {
             stage.setScene(scene);
             stage.showAndWait();
             
-            Alert fileAlert;
-            boolean success = cacwc.createAssociateCustomer();
-            if(success) {
-                treeViewControllerRef.clearTreeView();
-                treeViewControllerRef.update();
-                fileAlert = new Alert(Alert.AlertType.INFORMATION);
-                fileAlert.setContentText("Customer Created Successfully");
-            }
-            else {
-                fileAlert = new Alert(Alert.AlertType.ERROR);
-                fileAlert.setContentText("Customer Creation Failed");
+            Alert fileAlert = new Alert(Alert.AlertType.ERROR);
+            int status = cacwc.createAssociateCustomer();
+            switch(status) {
+                case 0: {
+                   treeViewControllerRef.clearTreeView();
+                   treeViewControllerRef.update();
+                   fileAlert.setAlertType(Alert.AlertType.INFORMATION);
+                   fileAlert.setContentText("Customer Created Successfully"); 
+                   break;
+                }
+                case 1: {
+                    fileAlert.setContentText("Customer Creation Failed. No fields can be empty.");
+                    break;
+                }
+                case 2: {
+                    fileAlert.setContentText("Customer Creation Failed. Email already in use.");
+                    break;
+                }
+                default: {
+                    fileAlert.setContentText("Customer Creation Failed. An error occured.");
+                    break;
+                }
             }
             
             fileAlert.showAndWait();
@@ -193,17 +204,40 @@ public class MenuBarController implements Initializable {
             stage.setScene(scene);
             stage.showAndWait();
             
-            Alert fileAlert;
-            boolean success = cpcwc.createPayingCustomer();
-            if(success) {
-                treeViewControllerRef.clearTreeView();
-                treeViewControllerRef.update();
-                fileAlert = new Alert(Alert.AlertType.INFORMATION);
-                fileAlert.setContentText("Customer Created Successfully");
-            }
-            else {
-                fileAlert = new Alert(Alert.AlertType.ERROR);
-                fileAlert.setContentText("Customer Creation Failed");
+            Alert fileAlert = new Alert(Alert.AlertType.ERROR);
+            
+            int status = cpcwc.createPayingCustomer();
+            switch(status) {
+                case 0: {
+                   treeViewControllerRef.clearTreeView();
+                   treeViewControllerRef.update();
+                   fileAlert.setAlertType(Alert.AlertType.INFORMATION);
+                   fileAlert.setContentText("Customer Created Successfully"); 
+                   break;
+                }
+                case 1: {
+                    fileAlert.setContentText("Customer Creation Failed. No fields can be empty.");
+                    break;
+                }
+                case 2: {
+                    fileAlert.setContentText("Customer Creation Failed. Email already in use.");
+                    break;
+                }
+                case 3: {
+                    fileAlert.setContentText("Customer Creation Failed. Account Number is invalid, must be 8 digit number.");
+                    break;
+                    
+                }
+                case 4: {
+                    fileAlert.setContentText("Customer Creation Failed. Card Number or Expiry is invalid. "
+                            + "Card number must be an 16 digit number and Expiry must be in the future.");
+                    break;
+                    
+                }
+                default: {
+                    fileAlert.setContentText("Customer Creation Failed. An error occured.");
+                    break;
+                }
             }
             
             fileAlert.showAndWait();
@@ -230,17 +264,28 @@ public class MenuBarController implements Initializable {
             stage.setScene(scene);
             stage.showAndWait();
             
-            Alert fileAlert;
-            boolean success = csmwc.createSupplementMagazine();
-            if(success) {
-                treeViewControllerRef.clearTreeView();
-                treeViewControllerRef.update();
-                fileAlert = new Alert(Alert.AlertType.INFORMATION);
-                fileAlert.setContentText("Supplement Created Successfully");
-            }
-            else {
-                fileAlert = new Alert(Alert.AlertType.ERROR);
-                fileAlert.setContentText("Supplement Creation Failed");
+            Alert fileAlert = new Alert(Alert.AlertType.ERROR);
+            int status = csmwc.createSupplementMagazine();
+            switch(status) {
+                case 0: {
+                   treeViewControllerRef.clearTreeView();
+                   treeViewControllerRef.update();
+                   fileAlert.setAlertType(Alert.AlertType.INFORMATION);
+                   fileAlert.setContentText("Supplement Created Successfully"); 
+                   break;
+                }
+                case 1: {
+                    fileAlert.setContentText("Supplement Creation Failed. No fields can be empty.");
+                    break;
+                }
+                case 2: {
+                    fileAlert.setContentText("Supplement Creation Failed. Title already in use.");
+                    break;
+                }
+                default: {
+                    fileAlert.setContentText("Supplement Creation Failed. An error occured.");
+                    break;
+                }
             }
             
             fileAlert.showAndWait();

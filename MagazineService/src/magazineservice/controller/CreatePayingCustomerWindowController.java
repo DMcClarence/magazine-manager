@@ -57,7 +57,7 @@ public class CreatePayingCustomerWindowController implements Initializable {
         currentWindow.close();
     }
     
-    public boolean createPayingCustomer() {        
+    public int createPayingCustomer() {        
         return payingCustomerFormController.createPayingCustomer();
     }
 }

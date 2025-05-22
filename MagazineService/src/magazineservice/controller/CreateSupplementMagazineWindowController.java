@@ -57,7 +57,7 @@ public class CreateSupplementMagazineWindowController implements Initializable {
         currentWindow.close();
     }
     
-    public boolean createSupplementMagazine() {        
+    public int createSupplementMagazine() {        
         return supplementMagazineFormController.createSupplementMagazine();
     }
 }

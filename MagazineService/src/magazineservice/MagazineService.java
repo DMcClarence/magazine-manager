@@ -6,11 +6,14 @@ package magazineservice;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import magazineservice.controller.LaunchController;
@@ -38,7 +41,23 @@ public class MagazineService extends Application {
             primaryStage.setTitle("Magazine Manager");
             primaryStage.setScene(scene);
             primaryStage.setOnCloseRequest(e -> {
-                Platform.exit();
+                if(db != null) {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setContentText("""
+                                         Would you like to save any changes before exiting?
+                                         The program will exit regardless."""); 
+                    Optional<ButtonType> pressed = alert.showAndWait();
+                    ButtonType button = pressed.orElse(ButtonType.CANCEL);
+                    if(button == ButtonType.OK) {
+                        if(dbFile != null) {
+                            MagazineService.getDBController().serializeDB(MagazineService.getDBFile());
+                        }
+                        Platform.exit();
+                    }
+                }
+                else {
+                    Platform.exit();
+                }
             });
             primaryStage.show();
             

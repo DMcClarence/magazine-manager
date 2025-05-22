@@ -347,10 +347,10 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         System.out.println(payingCustomerRef);
     }
     
-    public boolean createPayingCustomer() {
+    public int createPayingCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty())) {
-            return false;
+            return 1;
         }
         
         if(accountNumberFieldTextBox.getText() != null && !accountNumberFieldTextBox.getText().strip().isEmpty()) {
@@ -367,19 +367,34 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             directDebitRef = null;
         }
         else {
-            return false;
+            return 1;
+        }
+        
+        if(MagazineService.getDBController().getCustomer(emailFieldTextBox.getText()) != null) {
+            return 2;
         }
         
         PayingCustomer payingCustomer = null;
         if(directDebitRef != null) {
-            payingCustomer = new PayingCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
-                                                MagazineService.getDBController().getMainMagazine(),
-                                                directDebitRef);
+            try {
+                payingCustomer = new PayingCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
+                                                    MagazineService.getDBController().getMainMagazine(),
+                                                    directDebitRef);
+            }
+            catch(IllegalArgumentException iae) {
+                return 3;
+            }
+            
         }
         else if(creditCardRef != null) {
-            payingCustomer = new PayingCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
-                                                MagazineService.getDBController().getMainMagazine(),
-                                                creditCardRef);
+            try {
+               payingCustomer = new PayingCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
+                                                   MagazineService.getDBController().getMainMagazine(),
+                                                   creditCardRef); 
+            }
+            catch(IllegalArgumentException iae) {
+                return 4;
+            }
         }
         
         MagazineService.getDBController().addCustomer(payingCustomer);
@@ -393,7 +408,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             }
         }
         
-        return true;
+        return 0;
     }
     
     public void clearFields() {

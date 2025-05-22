@@ -17,6 +17,7 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import magazineservice.MagazineService;
 import magazineservice.model.AssociateCustomer;
 import magazineservice.model.CreditCard;

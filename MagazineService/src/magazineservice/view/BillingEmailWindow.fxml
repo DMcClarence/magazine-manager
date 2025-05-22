@@ -22,6 +22,6 @@
         </TreeItem>
     </TreeView>
     <ScrollPane fx:id="scrollPane">
-        <Label fx:id="billingEmail"></Label>
+        <Label fx:id="billingEmail" style="-fx-padding: 10px;"></Label>
     </ScrollPane>
 </SplitPane>

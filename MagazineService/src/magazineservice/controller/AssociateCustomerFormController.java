@@ -189,11 +189,15 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         System.out.println(associateCustomerRef);
     }
     
-    public boolean createAssociateCustomer() {
+    public int createAssociateCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty()) || 
            (benefactorRef == null)) {
-            return false;
+            return 1;
+        }
+        
+        if(MagazineService.getDBController().getCustomer(emailFieldTextBox.getText()) != null) {
+            return 2;
         }
         
         AssociateCustomer associateCustomer = new AssociateCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
@@ -211,7 +215,7 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             }
         }
         
-        return true;
+        return 0;
     }
     
     public void clearFields() {
