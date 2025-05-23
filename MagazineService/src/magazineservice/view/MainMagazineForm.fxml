@@ -18,7 +18,7 @@
                     <TextField fx:id="titleFieldTextBox" visible="false" managed="false"></TextField> 
                 </HBox>
                 <HBox fx:id="weeklyCostField" spacing="5.0f">
-                    <Label fx:id="weeklyCostFieldLabel" text="Weekly Cost: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="weeklyCostFieldLabel" text="Weekly Cost: $" alignment="CENTER_LEFT"></Label>
                     <Label fx:id="displayedWeeklyCost"></Label>
                     <TextField fx:id="weeklyCostFieldTextBox" visible="false" managed="false"></TextField>
                 </HBox>

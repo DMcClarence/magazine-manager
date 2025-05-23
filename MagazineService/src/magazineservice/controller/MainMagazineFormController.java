@@ -72,35 +72,35 @@ public class MainMagazineFormController implements Initializable, EditableForm {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                displayedTitle.setText(titleFieldTextBox.getText());
-                if(treeItemRef != null) {
-                    treeItemRef.setValue(titleFieldTextBox.getText());  
-                }
-            }}
-        );
-        
-        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                titleFieldTextBox.setText(displayedTitle.getText());
-                if(treeItemRef != null) {
-                    treeItemRef.setValue(displayedTitle.getText());   
-                }
-            }}
-        );
-        
-        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
-            }}
-        );
-        
-        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
-            }}
-        );
+//        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                displayedTitle.setText(titleFieldTextBox.getText());
+//                if(treeItemRef != null) {
+//                    treeItemRef.setValue(titleFieldTextBox.getText());  
+//                }
+//            }}
+//        );
+//        
+//        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                titleFieldTextBox.setText(displayedTitle.getText());
+//                if(treeItemRef != null) {
+//                    treeItemRef.setValue(displayedTitle.getText());   
+//                }
+//            }}
+//        );
+//        
+//        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
+//            }}
+//        );
+//        
+//        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
+//            }}
+//        );
     }
     
     public void setMainMagazineRef(MainMagazine mainMagazine) {
@@ -114,7 +114,7 @@ public class MainMagazineFormController implements Initializable, EditableForm {
     public void displayData() {
         if(mainMagazineRef != null) {
             displayedTitle.setText(mainMagazineRef.getTitle());
-            displayedWeeklyCost.setText(Double.toString(mainMagazineRef.getWeeklyCost()));           
+            displayedWeeklyCost.setText(String.format("%.2f", mainMagazineRef.getWeeklyCost()));           
         }
 
     }
@@ -139,6 +139,15 @@ public class MainMagazineFormController implements Initializable, EditableForm {
         displayedWeeklyCost.setVisible(!(editable));
         weeklyCostFieldTextBox.setManaged(editable);
         weeklyCostFieldTextBox.setVisible(editable);
+        
+        if(editable && mainMagazineRef != null) {
+            titleFieldTextBox.setText(mainMagazineRef.getTitle());
+            weeklyCostFieldTextBox.setText(String.format("%.2f", mainMagazineRef.getWeeklyCost()));
+        }
+        else if(!(editable) && mainMagazineRef != null) {
+            displayedTitle.setText(titleFieldTextBox.getText());
+            displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+        }
         
         // Update Object in Database
         updateRefData();

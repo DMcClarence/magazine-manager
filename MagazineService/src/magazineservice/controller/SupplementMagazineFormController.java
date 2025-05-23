@@ -80,35 +80,35 @@ public class SupplementMagazineFormController implements Initializable, Editable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                displayedTitle.setText(titleFieldTextBox.getText());
-                if(treeItemRef != null) {
-                   treeItemRef.setValue(titleFieldTextBox.getText()); 
-                }
-            }}
-        );
-        
-        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                titleFieldTextBox.setText(displayedTitle.getText());
-                if(treeItemRef != null) {
-                  treeItemRef.setValue(displayedTitle.getText());  
-                }
-            }}
-        );
-        
-        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
-            }}
-        );
-        
-        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null && newValue != oldValue){
-                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
-            }}
-        );
+//        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                displayedTitle.setText(titleFieldTextBox.getText());
+//                if(treeItemRef != null) {
+//                   treeItemRef.setValue(titleFieldTextBox.getText()); 
+//                }
+//            }}
+//        );
+//        
+//        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                titleFieldTextBox.setText(displayedTitle.getText());
+//                if(treeItemRef != null) {
+//                  treeItemRef.setValue(displayedTitle.getText());  
+//                }
+//            }}
+//        );
+//        
+//        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
+//            }}
+//        );
+//        
+//        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null && newValue != oldValue){
+//                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
+//            }}
+//        );
     }    
     
     public void setSupplementMagazineRef(SupplementMagazine supplementMagazine) {
@@ -122,7 +122,7 @@ public class SupplementMagazineFormController implements Initializable, Editable
     public void displayData() {
         if(supplementMagazineRef != null) {
             displayedTitle.setText(supplementMagazineRef.getTitle());
-            displayedWeeklyCost.setText(Double.toString(supplementMagazineRef.getWeeklyCost()));  
+            displayedWeeklyCost.setText(String.format("%.2f", supplementMagazineRef.getWeeklyCost()));  
             displayedCount.setText(Integer.toString(MagazineService.getDBController().getNumOfSubbedCustomers(supplementMagazineRef.getTitle())));
         }
 
@@ -148,6 +148,15 @@ public class SupplementMagazineFormController implements Initializable, Editable
         displayedWeeklyCost.setVisible(!(editable));
         weeklyCostFieldTextBox.setManaged(editable);
         weeklyCostFieldTextBox.setVisible(editable);
+        
+        if(editable && supplementMagazineRef != null) {
+            titleFieldTextBox.setText(supplementMagazineRef.getTitle());
+            weeklyCostFieldTextBox.setText(String.format("%.2f", supplementMagazineRef.getWeeklyCost()));
+        }
+        else if(!(editable) && supplementMagazineRef != null) {
+            displayedTitle.setText(titleFieldTextBox.getText());
+            displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+        }
         
         // Update Object in Database
         updateRefData();

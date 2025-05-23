@@ -54,22 +54,6 @@ public class BillingEmailWindowController implements Initializable {
                     customer.getChildren().add(new TreeItem<String>(ym.toString()));
                 }
             }
-            
-//            treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//                if(newValue != null && newValue != oldValue) {
-//                    try {
-//                        if(temp.containsKey(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue()))) {
-//                            billingEmail.setText(temp.get(YearMonth.parse(treeView.getSelectionModel().getSelectedItem().getValue())));
-//                        }
-//                        else {
-//                            billingEmail.setText(null);
-//                        }
-//                    }
-//                    catch(DateTimeParseException dtpe) {
-//                        billingEmail.setText(null);
-//                    }
-//                }
-//            });
         }
         
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
