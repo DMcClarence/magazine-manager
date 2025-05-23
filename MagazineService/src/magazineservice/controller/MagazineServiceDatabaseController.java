@@ -162,4 +162,8 @@ public class MagazineServiceDatabaseController {
     public HashMap<YearMonth, String> getBillingHistoryForCustomer(String email) {
         return dbRef.getEmailDatabase().get(email);
     }
+    
+    public void changeBenefactor(String associateEmail, String oldBenefactorEmail, String newBenefactorEmail) {
+        customerDBController.changeBenefactor(associateEmail, oldBenefactorEmail, newBenefactorEmail);
+    }
 }

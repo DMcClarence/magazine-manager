@@ -130,7 +130,7 @@ public class SupplementMagazineFormController implements Initializable, Editable
     
     public void updateRefData() {
         if(supplementMagazineRef != null) {
-            supplementMagazineRef.setName(titleFieldTextBox.getText());
+            // supplementMagazineRef.setName(titleFieldTextBox.getText());
             supplementMagazineRef.setWeeklyCost(Double.parseDouble(weeklyCostFieldTextBox.getText()));
         }
     }
@@ -138,10 +138,12 @@ public class SupplementMagazineFormController implements Initializable, Editable
     @Override
     public void setEditable(boolean editable) {
         // Hide Displayed Title, Show Title Text Field
-        displayedTitle.setManaged(!(editable));
-        displayedTitle.setVisible(!(editable));
-        titleFieldTextBox.setManaged(editable);
-        titleFieldTextBox.setVisible(editable);
+        if(supplementMagazineRef == null) {
+            displayedTitle.setManaged(!(editable));
+            displayedTitle.setVisible(!(editable));
+            titleFieldTextBox.setManaged(editable);
+            titleFieldTextBox.setVisible(editable); 
+        }
         
         // Hide Displayed Weekly Cost, Show Weekly Cost Text Field
         displayedWeeklyCost.setManaged(!(editable));

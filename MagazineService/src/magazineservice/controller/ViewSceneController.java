@@ -6,6 +6,7 @@ package magazineservice.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,10 +15,10 @@ import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 import magazineservice.MagazineService;
 import magazineservice.model.AssociateCustomer;
 import magazineservice.model.CreditCard;
@@ -94,8 +95,43 @@ public class ViewSceneController implements Initializable {
         
         deleteBar.getButtons().add(deleteButton);
         deleteButton.setOnAction(e -> {
-            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getPayingHeader() ||
-               treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getAssociatesHeader()) {
+            if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getPayingHeader()) {
+                 try {
+                    if(!((PayingCustomer)MagazineService.getDBController().getCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())).getAssociates().isEmpty()) {
+                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                        alert.setContentText("""
+                                             Deleting this Customer will result in 
+                                             the deletion of all their Associates.
+                                             Are you sure you want to continue?""");
+                        Optional<ButtonType> pressed = alert.showAndWait();
+                        ButtonType button = pressed.orElse(ButtonType.CANCEL);
+                        if(button == ButtonType.OK) {
+                            MagazineService.getDBController().removeCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
+                            formPane.setTop(null);
+                            formPane.setCenter(null);
+                            formPane.setBottom(null);
+                            formController = null;
+                            treeViewController.getTreeView().getSelectionModel().clearSelection();
+                            treeViewController.clearTreeView();
+                            treeViewController.update();
+                        }
+                    }
+                    else {
+                        MagazineService.getDBController().removeCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
+                        formPane.setTop(null);
+                        formPane.setCenter(null);
+                        formPane.setBottom(null);
+                        formController = null;
+                        treeViewController.getTreeView().getSelectionModel().clearSelection();
+                        treeViewController.clearTreeView();
+                        treeViewController.update();
+                    }
+                }
+                catch(ClassCastException cce) {
+                    cce.printStackTrace();
+                }               
+            }
+            else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getAssociatesHeader()) {
                 MagazineService.getDBController().removeCustomer(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
                 formPane.setTop(null);
                 formPane.setCenter(null);
@@ -106,17 +142,12 @@ public class ViewSceneController implements Initializable {
                 treeViewController.update();
             }
             else if(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getParent() == treeViewController.getSupplementsHeader()) {
-                boolean subbed = false;
-                for(Customer c : MagazineService.getDBController().getAllCustomers()) {
-                    if(MagazineService.getDBController().isSubscribedToSupplement(c.getEmail(), treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue())) {
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setContentText("Can't Delete Supplement while there are Customers Subscribed");
-                        alert.showAndWait();
-                        subbed = true;
-                        break;
-                    }
+                if(MagazineService.getDBController().getNumOfSubbedCustomers(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue()) > 0) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setContentText("Can't Delete Supplement while there are Customers Subscribed");
+                    alert.showAndWait();
                 }
-                if(!subbed) {
+                else {
                     MagazineService.getDBController().removeSupplementMagazine(treeViewController.getTreeView().getSelectionModel().getSelectedItem().getValue());
                     formPane.setTop(null);
                     formPane.setCenter(null);

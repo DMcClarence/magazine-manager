@@ -30,6 +30,37 @@ public class MagazineService extends Application {
     private static MagazineServiceDatabaseController dbController = null;
     private static File dbFile = null;
     
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    public static MagazineServiceDatabase getDatabase() {
+        return MagazineService.db;
+    }
+    
+    public static void setDatabase(MagazineServiceDatabase db) {
+        MagazineService.db = db;
+    }
+    
+    public static MagazineServiceDatabaseController getDBController() {
+        return MagazineService.dbController;
+    }
+    
+    public static void setDBController(MagazineServiceDatabaseController dbController) {
+        MagazineService.dbController = dbController;
+    }
+    
+    public static void setDBFile(File dbFile) {
+        MagazineService.dbFile = dbFile;
+    }
+    
+    public static File getDBFile() {
+        return MagazineService.dbFile;
+    }
     @Override
     public void start(Stage primaryStage) {        
         try {
@@ -44,8 +75,8 @@ public class MagazineService extends Application {
                 if(db != null) {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setContentText("""
-                                         Would you like to save any changes before exiting?
-                                         The program will exit regardless."""); 
+                                                             Would you like to save any changes before exiting?
+                                                             The program will exit regardless.""");
                     Optional<ButtonType> pressed = alert.showAndWait();
                     ButtonType button = pressed.orElse(ButtonType.CANCEL);
                     if(button == ButtonType.OK) {
@@ -84,36 +115,5 @@ public class MagazineService extends Application {
         catch(IOException ioe) {
             ioe.printStackTrace();
         }
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
-    public static MagazineServiceDatabase getDatabase() {
-        return MagazineService.db;
-    }
-    
-    public static void setDatabase(MagazineServiceDatabase db) {
-        MagazineService.db = db;
-    }
-    
-    public static MagazineServiceDatabaseController getDBController() {
-        return MagazineService.dbController;
-    }
-    
-    public static void setDBController(MagazineServiceDatabaseController dbController) {
-        MagazineService.dbController = dbController;
-    }
-    
-    public static void setDBFile(File dbFile) {
-        MagazineService.dbFile = dbFile;
-    }
-    
-    public static File getDBFile() {
-        return MagazineService.dbFile;
     }
 }

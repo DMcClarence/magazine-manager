@@ -8,12 +8,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import magazineservice.MagazineService;
 import magazineservice.model.MagazineServiceDatabase;
 import magazineservice.model.MainMagazine;
 import magazineservice.view.EditableForm;
@@ -145,12 +147,24 @@ public class MainMagazineFormController implements Initializable, EditableForm {
             weeklyCostFieldTextBox.setText(String.format("%.2f", mainMagazineRef.getWeeklyCost()));
         }
         else if(!(editable) && mainMagazineRef != null) {
-            displayedTitle.setText(titleFieldTextBox.getText());
+            if(MagazineService.getDBController().getSupplementMagazine(titleFieldTextBox.getText()) != null) {
+                titleFieldTextBox.setText(displayedTitle.getText());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Title Already in Use.");
+                alert.showAndWait();
+            } 
+            else {
+                displayedTitle.setText(titleFieldTextBox.getText());
+                if(treeItemRef != null) {
+                    treeItemRef.setValue(displayedTitle.getText());   
+                }
+            }
             displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
         }
         
         // Update Object in Database
         updateRefData();
+        System.out.println(mainMagazineRef);
     }
     
     public MagazineServiceDatabase createMagazineService() {

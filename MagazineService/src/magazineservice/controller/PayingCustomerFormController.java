@@ -10,6 +10,7 @@ import java.time.YearMonth;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -227,6 +228,7 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                 associatesList.setManaged(true);
                 associatesList.setVisible(true);
                 
+                associatesList.getItems().clear();
                 for(AssociateCustomer ac : payingCustomerRef.getAssociates()) {
                     associatesList.getItems().add(ac.getEmail());
                 }
@@ -236,8 +238,8 @@ public class PayingCustomerFormController implements Initializable, EditableForm
     
     public void updateRefData() {
         if(payingCustomerRef != null) {
-            payingCustomerRef.setName(nameFieldTextBox.getText());
-            payingCustomerRef.setEmail(emailFieldTextBox.getText());
+            payingCustomerRef.setName(displayedName.getText());
+            payingCustomerRef.setEmail(displayedEmail.getText());
             if(directDebitRef != null) {
                 payingCustomerRef.setPaymentMethod(directDebitRef);   
             }
@@ -265,10 +267,12 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         nameFieldTextBox.setVisible(editable);
         
         // Hide Displayed Weekly Cost, Show Weekly Cost Text Field
-        displayedEmail.setManaged(!(editable));
-        displayedEmail.setVisible(!(editable));
-        emailFieldTextBox.setManaged(editable);
-        emailFieldTextBox.setVisible(editable);
+        if(payingCustomerRef == null) {
+            displayedEmail.setManaged(!(editable));
+            displayedEmail.setVisible(!(editable));
+            emailFieldTextBox.setManaged(editable);
+            emailFieldTextBox.setVisible(editable);
+        }
         
         displayedAccountNumber.setManaged(!(editable));
         displayedAccountNumber.setVisible(!(editable));
@@ -329,15 +333,127 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             displayedEmail.setText(emailFieldTextBox.getText());
             switch(paymentMethodChoices.getSelectionModel().getSelectedIndex()) {
                 case 0 -> {
-                    displayedAccountNumber.setText(accountNumberFieldTextBox.getText());
+                    if(accountNumberFieldTextBox.getText() != null && !accountNumberFieldTextBox.getText().strip().isEmpty()) {
+                       displayedAccountNumber.setText(accountNumberFieldTextBox.getText());
+                        if(directDebitRef != null) {
+                            try {
+                                directDebitRef.setAccountNumber(displayedAccountNumber.getText());
+                            }
+                            catch(IllegalArgumentException iae) {
+                                displayedAccountNumber.setText(directDebitRef.getAccountNumber());
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setContentText("""
+                                                      An Error Occured. 
+                                                      Payment Method Not Updated.
+                                                      Make Sure All Fields are Complete and 
+                                                      Account Number has 8 digits.""");
+                                alert.showAndWait();
+                            }
+                        }
+                        else {
+                            try {
+                                directDebitRef = new DirectDebit(displayedAccountNumber.getText());
+                                creditCardRef = null;
+                            }
+                            catch(IllegalArgumentException iae) {
+                                paymentMethodChoices.getSelectionModel().select(1);
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setContentText("""
+                                                     An Error Occured. 
+                                                     Payment Method Not Updated.
+                                                     Make Sure All Fields are Complete and 
+                                                     Account Number has 8 digits.""");
+                                alert.showAndWait();
+                            }
+                        }
+                    }
+                    else {
+                        if(directDebitRef != null) {
+                            paymentMethodChoices.getSelectionModel().select(0);
+                            displayedAccountNumber.setText(directDebitRef.getAccountNumber());
+                        }
+                        else if(creditCardRef != null) {
+                           paymentMethodChoices.getSelectionModel().select(1);
+                           displayedCardNumber.setText(creditCardRef.getCardNumber());
+                           selectedMonth.getSelectionModel().select((creditCardRef.getExpiry().getMonthValue() - 1));
+                           selectedYear.getSelectionModel().select((NO_OF_EXPIRY_YEARS - 1) - ((Year.now().getValue() + (NO_OF_EXPIRY_YEARS - 1)) - creditCardRef.getExpiry().getYear()));
+                        }
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("""
+                                             An Error Occured. 
+                                             Payment Method Not Updated.
+                                             Make Sure All Fields are Complete and 
+                                             Account Number has 8 digits.""");
+                        alert.showAndWait();
+                    }
                 }
                 case 1 -> {
-                    displayedCardNumber.setText(cardNumberFieldTextBox.getText());
-                    if(creditCardRef != null) {
-                        creditCardRef.setExpiry((selectedYear.getSelectionModel().getSelectedIndex() + Year.now().getValue()),
-                                                (selectedMonth.getSelectionModel().getSelectedIndex() + 1));   
+                    if(cardNumberFieldTextBox.getText() != null && 
+                       !cardNumberFieldTextBox.getText().strip().isEmpty() &&
+                       selectedYear.getSelectionModel().selectedItemProperty() != null &&
+                       selectedMonth.getSelectionModel().selectedItemProperty() != null) {
+                        displayedCardNumber.setText(cardNumberFieldTextBox.getText());
+                        
+                        if(creditCardRef != null) {
+                            try {
+                                creditCardRef.setCardNumber(displayedCardNumber.getText());
+                                creditCardRef.setExpiry((selectedYear.getSelectionModel().getSelectedIndex() + Year.now().getValue()),
+                                                        (selectedMonth.getSelectionModel().getSelectedIndex() + 1));                                  
+                            }
+                            catch(IllegalArgumentException iae) {
+                                displayedCardNumber.setText(creditCardRef.getCardNumber());
+                                selectedMonth.getSelectionModel().select((creditCardRef.getExpiry().getMonthValue() - 1));
+                                selectedYear.getSelectionModel().select((NO_OF_EXPIRY_YEARS - 1) - ((Year.now().getValue() + (NO_OF_EXPIRY_YEARS - 1)) - creditCardRef.getExpiry().getYear()));
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setContentText("""
+                                                     An Error Occured. 
+                                                     Payment Method Not Updated.
+                                                     Make Sure All Fields are Complete, 
+                                                     Card Number has 16 digits and Expiry is 
+                                                     a Future Date.""");
+                                alert.showAndWait();
+                            }
+                        }
+                        else {
+                            try {
+                                creditCardRef = new CreditCard(displayedCardNumber.getText(), 
+                                                               YearMonth.of((selectedYear.getSelectionModel().getSelectedIndex() + Year.now().getValue()),
+                                                                            (selectedMonth.getSelectionModel().getSelectedIndex() + 1)));
+                                directDebitRef = null;                                
+                            }
+                            catch(IllegalArgumentException iae) {
+                                paymentMethodChoices.getSelectionModel().select(0);
+                                Alert alert = new Alert(Alert.AlertType.ERROR);
+                                alert.setContentText("""
+                                                     An Error Occured. 
+                                                     Payment Method Not Updated.
+                                                     Make Sure All Fields are Complete, 
+                                                     Card Number has 16 digits and Expiry is 
+                                                     a Future Date.""");
+                                alert.showAndWait();
+                            }
+                        }
                     }
-                    
+                    else {
+                        if(directDebitRef != null) {
+                            paymentMethodChoices.getSelectionModel().select(0);
+                            displayedAccountNumber.setText(directDebitRef.getAccountNumber());
+                        }
+                        else if(creditCardRef != null) {
+                           paymentMethodChoices.getSelectionModel().select(1);
+                           displayedCardNumber.setText(creditCardRef.getCardNumber());
+                           selectedMonth.getSelectionModel().select((creditCardRef.getExpiry().getMonthValue() - 1));
+                           selectedYear.getSelectionModel().select((NO_OF_EXPIRY_YEARS - 1) - ((Year.now().getValue() + (NO_OF_EXPIRY_YEARS - 1)) - creditCardRef.getExpiry().getYear()));
+                        }
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("""
+                                             An Error Occured. 
+                                             Payment Method Not Updated.
+                                             Make Sure All Fields are Complete, 
+                                             Card Number has 16 digits and Expiry is 
+                                             a Future Date.""");
+                        alert.showAndWait();
+                    }
                 }     
             }
         }       

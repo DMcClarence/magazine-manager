@@ -41,7 +41,8 @@ public class CustomerDatabaseController {
     public void removeCustomer(String email) {
         try {
             if(dbRef.getDatabase().get(email) instanceof PayingCustomer) {
-                for(AssociateCustomer ac : ((PayingCustomer)dbRef.getDatabase().get(email)).getAssociates()) {
+                ArrayList<AssociateCustomer> temp = new ArrayList<AssociateCustomer>(((PayingCustomer)dbRef.getDatabase().get(email)).getAssociates());
+                for(AssociateCustomer ac : temp) {
                     removeCustomer(ac.getEmail());
                 }
             }
@@ -77,6 +78,17 @@ public class CustomerDatabaseController {
     
     public ArrayList<Customer> getAllCustomers() {
         return new ArrayList<Customer>(dbRef.getDatabase().values());
+    }
+    
+    public void changeBenefactor(String associateEmail, String oldBenefactorEmail, String newBenefactorEmail) {
+        try {
+            payingCustomerController.removeAssociateCustomer((PayingCustomer)dbRef.getDatabase().get(oldBenefactorEmail), (AssociateCustomer)dbRef.getDatabase().get(associateEmail));
+            payingCustomerController.addAssociateCustomer((PayingCustomer)dbRef.getDatabase().get(newBenefactorEmail), (AssociateCustomer)dbRef.getDatabase().get(associateEmail));
+            ((AssociateCustomer)dbRef.getDatabase().get(associateEmail)).setBenefactor((PayingCustomer)dbRef.getDatabase().get(newBenefactorEmail));
+        }
+        catch(IllegalArgumentException iae) {
+            iae.printStackTrace();
+        } 
     }
     
     public void setDatabaseRef(CustomerDatabase db) {

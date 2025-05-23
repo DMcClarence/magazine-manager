@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -88,7 +88,8 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         benefactorChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null && newValue != oldValue) {
                 try {
-                    benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem());   
+                    MagazineService.getDBController().changeBenefactor(associateCustomerRef.getEmail(), associateCustomerRef.getBenefactor().getEmail(), benefactorChoices.getSelectionModel().getSelectedItem());
+                    benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem()); 
                 }
                 catch(ClassCastException cce) {
                     cce.printStackTrace();
@@ -126,7 +127,7 @@ public class AssociateCustomerFormController implements Initializable, EditableF
     public void updateRefData() {
         if(associateCustomerRef != null) {
             associateCustomerRef.setName(nameFieldTextBox.getText());
-            associateCustomerRef.setEmail(emailFieldTextBox.getText());
+            // associateCustomerRef.setEmail(emailFieldTextBox.getText());
             associateCustomerRef.setBenefactor(benefactorRef);
             
             for(CheckBox cb : supplementListController.getSupplementList()) {
@@ -149,11 +150,13 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         nameFieldTextBox.setVisible(editable);
         
         // Hide Displayed Weekly Cost, Show Weekly Cost Text Field
-        displayedEmail.setManaged(!(editable));
-        displayedEmail.setVisible(!(editable));
-        emailFieldTextBox.setManaged(editable);
-        emailFieldTextBox.setVisible(editable);
-        
+        if(associateCustomerRef == null) {
+            displayedEmail.setManaged(!(editable));
+            displayedEmail.setVisible(!(editable));
+            emailFieldTextBox.setManaged(editable);
+            emailFieldTextBox.setVisible(editable);
+        }
+
         benefactorChoices.setDisable(!(editable));
         
         supplementListController.setEditable(editable);
@@ -174,14 +177,23 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             }
         }
         else if(!(editable) && associateCustomerRef != null) {
-            displayedName.setText(nameFieldTextBox.getText());
-            displayedEmail.setText(emailFieldTextBox.getText());
-            try {
-                benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem());
+            if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
+               (benefactorRef == null)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR); 
+                alert.setContentText("Customer Update Failed. One or More Fields Were Empty.");
+                alert.showAndWait();
             }
-            catch(ClassCastException cce) {
-                cce.printStackTrace();
+            else {
+                displayedName.setText(nameFieldTextBox.getText());
+//              displayedEmail.setText(emailFieldTextBox.getText());
+                try {
+                    benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem());
+                }
+                catch(ClassCastException cce) {
+                    cce.printStackTrace();
+                }   
             }
+
         }   
         
         // Update Object in Database
