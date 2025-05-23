@@ -77,6 +77,8 @@ public class SupplementMagazineFormController implements Initializable, Editable
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -111,14 +113,25 @@ public class SupplementMagazineFormController implements Initializable, Editable
 //        );
     }    
     
+    /**
+     *
+     * @param supplementMagazine
+     */
     public void setSupplementMagazineRef(SupplementMagazine supplementMagazine) {
         this.supplementMagazineRef = supplementMagazine;
     }
     
+    /**
+     *
+     * @param treeItem
+     */
     public void setTreeItemRef(TreeItem<String> treeItem) {
         this.treeItemRef = treeItem;
     }
     
+    /**
+     *
+     */
     public void displayData() {
         if(supplementMagazineRef != null) {
             displayedTitle.setText(supplementMagazineRef.getTitle());
@@ -128,6 +141,9 @@ public class SupplementMagazineFormController implements Initializable, Editable
 
     }
     
+    /**
+     *
+     */
     public void updateRefData() {
         if(supplementMagazineRef != null) {
             // supplementMagazineRef.setName(titleFieldTextBox.getText());
@@ -135,6 +151,10 @@ public class SupplementMagazineFormController implements Initializable, Editable
         }
     }
     
+    /**
+     *
+     * @param editable
+     */
     @Override
     public void setEditable(boolean editable) {
         // Hide Displayed Title, Show Title Text Field
@@ -165,6 +185,10 @@ public class SupplementMagazineFormController implements Initializable, Editable
         System.out.println(supplementMagazineRef);
     }
     
+    /**
+     *
+     * @return
+     */
     public int createSupplementMagazine() {
         if((titleFieldTextBox.getText() == null || titleFieldTextBox.getText().strip().isEmpty()) ||
            (weeklyCostFieldTextBox.getText() == null || weeklyCostFieldTextBox.getText().strip().isEmpty())) {
@@ -184,6 +208,9 @@ public class SupplementMagazineFormController implements Initializable, Editable
         return 0;
     }
     
+    /**
+     *
+     */
     public void clearFields() {
         titleFieldTextBox.clear();
         weeklyCostFieldTextBox.clear();

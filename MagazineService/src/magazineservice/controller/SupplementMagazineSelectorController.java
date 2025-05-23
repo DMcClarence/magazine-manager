@@ -26,6 +26,8 @@ public class SupplementMagazineSelectorController implements Initializable, Edit
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -38,6 +40,10 @@ public class SupplementMagazineSelectorController implements Initializable, Edit
         setEditable(false);
     }  
     
+    /**
+     *
+     * @param editable
+     */
     @Override
     public void setEditable(boolean editable) {
         for(CheckBox cb : getSupplementList()) {
@@ -45,10 +51,18 @@ public class SupplementMagazineSelectorController implements Initializable, Edit
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public ObservableList<CheckBox> getSupplementList() {
         return this.supplementList.getItems();
     }
     
+    /**
+     *
+     * @param hidden
+     */
     public void setHidden(boolean hidden) {
         supplementList.setManaged(!(hidden));
         supplementList.setVisible(!(hidden));

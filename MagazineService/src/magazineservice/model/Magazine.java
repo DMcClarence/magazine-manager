@@ -24,7 +24,7 @@ public abstract class Magazine implements Serializable {
 
     /**
      *
-     * @param title
+     * @param name
      * @param weeklyCost
      */
     public Magazine(String name, double weeklyCost) throws IllegalArgumentException {

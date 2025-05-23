@@ -14,10 +14,17 @@ import java.util.HashMap;
 public class CustomerDatabase implements Serializable {
     private HashMap<String, Customer> db;
     
+    /**
+     *
+     */
     public CustomerDatabase() {
         db = new HashMap<String, Customer>();
     }
     
+    /**
+     *
+     * @return
+     */
     public HashMap<String, Customer> getDatabase() {
         return this.db;
     }

@@ -138,6 +138,8 @@ public class PayingCustomerFormController implements Initializable, EditableForm
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -176,22 +178,41 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         associatesList.setOnScroll(e -> e.consume());
     }
         
+    /**
+     *
+     * @param payingCustomer
+     */
     public void setPayingCustomerRef(PayingCustomer payingCustomer) {
         this.payingCustomerRef = payingCustomer;
     }
     
+    /**
+     *
+     * @param directDebit
+     */
     public void setDirectDebitRef(DirectDebit directDebit) {
         this.directDebitRef = directDebit;
     }
     
+    /**
+     *
+     * @param creditCard
+     */
     public void setCreditCardRef(CreditCard creditCard) {
         this.creditCardRef = creditCard;
     }
     
+    /**
+     *
+     * @param treeItem
+     */
     public void setTreeItemRef(TreeItem<String> treeItem) {
         this.treeItemRef = treeItem;
     }
     
+    /**
+     *
+     */
     public void displayData() {
         if(payingCustomerRef != null) {
             displayedName.setText(payingCustomerRef.getName());
@@ -236,6 +257,9 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         }
     }
     
+    /**
+     *
+     */
     public void updateRefData() {
         if(payingCustomerRef != null) {
             payingCustomerRef.setName(displayedName.getText());
@@ -258,6 +282,10 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         }
     }
     
+    /**
+     *
+     * @param editable
+     */
     @Override
     public void setEditable(boolean editable) {
         // Hide Displayed Title, Show Title Text Field
@@ -463,6 +491,10 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         System.out.println(payingCustomerRef);
     }
     
+    /**
+     *
+     * @return
+     */
     public int createPayingCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty())) {
@@ -527,6 +559,9 @@ public class PayingCustomerFormController implements Initializable, EditableForm
         return 0;
     }
     
+    /**
+     *
+     */
     public void clearFields() {
         nameFieldTextBox.clear();
         emailFieldTextBox.clear();

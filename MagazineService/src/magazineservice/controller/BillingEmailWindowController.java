@@ -42,6 +42,8 @@ public class BillingEmailWindowController implements Initializable {
     private Label billingEmail;
     /**`
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

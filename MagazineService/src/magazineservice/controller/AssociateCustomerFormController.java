@@ -78,6 +78,8 @@ public class AssociateCustomerFormController implements Initializable, EditableF
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -98,14 +100,25 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         });
     }
         
+    /**
+     *
+     * @param associateCustomer
+     */
     public void setAssociateCustomerRef(AssociateCustomer associateCustomer) {
         this.associateCustomerRef = associateCustomer;
     }
     
+    /**
+     *
+     * @param treeItem
+     */
     public void setTreeItemRef(TreeItem<String> treeItem) {
         this.treeItemRef = treeItem;
     }
     
+    /**
+     *
+     */
     public void displayData() {
         if(associateCustomerRef != null) {
             displayedName.setText(associateCustomerRef.getName());
@@ -124,6 +137,9 @@ public class AssociateCustomerFormController implements Initializable, EditableF
 
     }
     
+    /**
+     *
+     */
     public void updateRefData() {
         if(associateCustomerRef != null) {
             associateCustomerRef.setName(nameFieldTextBox.getText());
@@ -141,6 +157,10 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         }
     }
     
+    /**
+     *
+     * @param editable
+     */
     @Override
     public void setEditable(boolean editable) {
         // Hide Displayed Title, Show Title Text Field
@@ -201,6 +221,10 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         System.out.println(associateCustomerRef);
     }
     
+    /**
+     *
+     * @return
+     */
     public int createAssociateCustomer() {
         if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
            (emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty()) || 
@@ -230,6 +254,9 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         return 0;
     }
     
+    /**
+     *
+     */
     public void clearFields() {
         nameFieldTextBox.clear();
         emailFieldTextBox.clear();

@@ -71,6 +71,8 @@ public class MainMagazineFormController implements Initializable, EditableForm {
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -105,14 +107,25 @@ public class MainMagazineFormController implements Initializable, EditableForm {
 //        );
     }
     
+    /**
+     *
+     * @param mainMagazine
+     */
     public void setMainMagazineRef(MainMagazine mainMagazine) {
         this.mainMagazineRef = mainMagazine;
     }
     
+    /**
+     *
+     * @param treeItem
+     */
     public void setTreeItemRef(TreeItem<String> treeItem) {
         this.treeItemRef = treeItem;
     }
     
+    /**
+     *
+     */
     public void displayData() {
         if(mainMagazineRef != null) {
             displayedTitle.setText(mainMagazineRef.getTitle());
@@ -121,6 +134,9 @@ public class MainMagazineFormController implements Initializable, EditableForm {
 
     }
     
+    /**
+     *
+     */
     public void updateRefData() {
         if(mainMagazineRef != null) {
             mainMagazineRef.setName(titleFieldTextBox.getText());
@@ -128,6 +144,10 @@ public class MainMagazineFormController implements Initializable, EditableForm {
         }
     }
     
+    /**
+     *
+     * @param editable
+     */
     @Override
     public void setEditable(boolean editable) {
         // Hide Displayed Title, Show Title Text Field
@@ -167,6 +187,10 @@ public class MainMagazineFormController implements Initializable, EditableForm {
         System.out.println(mainMagazineRef);
     }
     
+    /**
+     *
+     * @return
+     */
     public MagazineServiceDatabase createMagazineService() {
         if((titleFieldTextBox.getText() == null || titleFieldTextBox.getText().strip().isEmpty()) ||
            (weeklyCostFieldTextBox.getText() == null || weeklyCostFieldTextBox.getText().strip().isEmpty())) {
@@ -177,6 +201,9 @@ public class MainMagazineFormController implements Initializable, EditableForm {
                                             Double.parseDouble(weeklyCostFieldTextBox.getText()));
     }
     
+    /**
+     *
+     */
     public void clearFields() {
         titleFieldTextBox.clear();
         weeklyCostFieldTextBox.clear();

@@ -66,6 +66,8 @@ public class ViewSceneController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -263,10 +265,18 @@ public class ViewSceneController implements Initializable {
         menuBarController.setTreeViewControllerRef(treeViewController);
     }
     
+    /**
+     *
+     * @param editable
+     */
     public void setEditable(boolean editable) {
         formController.setEditable(editable);
     }
     
+    /**
+     *
+     * @return
+     */
     public MagazineServiceTreeViewController getTreeViewController() {
         return this.treeViewController;
     }

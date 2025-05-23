@@ -18,6 +18,11 @@ public class MagazineServiceDatabase implements Serializable {
     private HashMap<String, Integer> supplementSubCounts;
     private HashMap<String, HashMap<YearMonth, String>> emailDatabase;
     
+    /**
+     *
+     * @param title
+     * @param weeklyCost
+     */
     public MagazineServiceDatabase(String title, double weeklyCost) {
         customerDB = new CustomerDatabase();
         magazineDB = new MagazineDatabase(title, weeklyCost);
@@ -25,18 +30,34 @@ public class MagazineServiceDatabase implements Serializable {
         emailDatabase = new HashMap<String, HashMap<YearMonth, String>>();
     }
     
+    /**
+     *
+     * @return
+     */
     public CustomerDatabase getCustomerDatabase() {
         return this.customerDB;
     }
     
+    /**
+     *
+     * @return
+     */
     public MagazineDatabase getMagazineDatabase() {
         return this.magazineDB;
     }
     
+    /**
+     *
+     * @return
+     */
     public HashMap<String, Integer> getSupplementSubCounts() {
         return this.supplementSubCounts;
     }
     
+    /**
+     *
+     * @return
+     */
     public HashMap<String, HashMap<YearMonth, String>> getEmailDatabase() {
         return this.emailDatabase;
     }

@@ -54,11 +54,17 @@ public class LaunchController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }    
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void createNewFile(ActionEvent e) {
         Alert fileAlert;
@@ -97,6 +103,10 @@ public class LaunchController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public MagazineServiceDatabase openCreateMainMagazineWindow() {
         try {
             Stage stage = new Stage();
@@ -123,6 +133,10 @@ public class LaunchController implements Initializable {
         return null;
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void openExistingFile(ActionEvent e) {
         Alert fileAlert;

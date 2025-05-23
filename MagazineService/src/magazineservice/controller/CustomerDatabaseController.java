@@ -19,12 +19,20 @@ public class CustomerDatabaseController {
     private PayingCustomerController payingCustomerController;
     private AssociateCustomerController associateCustomerController;
     
+    /**
+     *
+     * @param db
+     */
     public CustomerDatabaseController(CustomerDatabase db) {
         setDatabaseRef(db);
         payingCustomerController = new PayingCustomerController();
         associateCustomerController = new AssociateCustomerController();
     }
     
+    /**
+     *
+     * @param customer
+     */
     public void addCustomer(Customer customer) {
         dbRef.getDatabase().put(customer.getEmail(), customer);
         
@@ -38,6 +46,10 @@ public class CustomerDatabaseController {
         }
     }
     
+    /**
+     *
+     * @param email
+     */
     public void removeCustomer(String email) {
         try {
             if(dbRef.getDatabase().get(email) instanceof PayingCustomer) {
@@ -57,10 +69,19 @@ public class CustomerDatabaseController {
         dbRef.getDatabase().remove(email);
     }
     
+    /**
+     *
+     * @param email
+     * @return
+     */
     public Customer getCustomer(String email) {
         return dbRef.getDatabase().get(email);
     }
     
+    /**
+     *
+     * @return
+     */
     public ArrayList<PayingCustomer> getAllPayingCustomers() {
         ArrayList<PayingCustomer> payingCustomers = new ArrayList<PayingCustomer>();
         
@@ -76,10 +97,20 @@ public class CustomerDatabaseController {
         return payingCustomers;
     }
     
+    /**
+     *
+     * @return
+     */
     public ArrayList<Customer> getAllCustomers() {
         return new ArrayList<Customer>(dbRef.getDatabase().values());
     }
     
+    /**
+     *
+     * @param associateEmail
+     * @param oldBenefactorEmail
+     * @param newBenefactorEmail
+     */
     public void changeBenefactor(String associateEmail, String oldBenefactorEmail, String newBenefactorEmail) {
         try {
             payingCustomerController.removeAssociateCustomer((PayingCustomer)dbRef.getDatabase().get(oldBenefactorEmail), (AssociateCustomer)dbRef.getDatabase().get(associateEmail));
@@ -91,6 +122,10 @@ public class CustomerDatabaseController {
         } 
     }
     
+    /**
+     *
+     * @param db
+     */
     public void setDatabaseRef(CustomerDatabase db) {
         this.dbRef = db;
     }

@@ -48,12 +48,17 @@ public class MagazineServiceTreeViewController implements Initializable {
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
     }
     
+    /**
+     *
+     */
     public void update() {
         for(Customer c : MagazineService.getDBController().getAllCustomers()) {
             TreeItem<String> customer = new TreeItem<String>(c.getEmail());
@@ -86,26 +91,49 @@ public class MagazineServiceTreeViewController implements Initializable {
         treeView.refresh();
     }
     
+    /**
+     *
+     * @return
+     */
     public TreeView<String> getTreeView() {
         return this.treeView;
     }
     
+    /**
+     *
+     * @return
+     */
     public TreeItem<String> getMainHeader() {
         return this.mainHeader;
     }
     
+    /**
+     *
+     * @return
+     */
     public TreeItem<String> getSupplementsHeader() {
         return this.supplementsHeader;
     }
     
+    /**
+     *
+     * @return
+     */
     public TreeItem<String> getPayingHeader() {
         return this.payingHeader;
     }
     
+    /**
+     *
+     * @return
+     */
     public TreeItem<String> getAssociatesHeader() {
         return this.associatesHeader;
     }
     
+    /**
+     *
+     */
     public void clearTreeView() {
         mainHeader.getChildren().clear();
         supplementsHeader.getChildren().clear();

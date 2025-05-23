@@ -38,18 +38,28 @@ public class CreateAssociateCustomerWindowController implements Initializable {
     
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         associateCustomerFormController.setEditable(true);
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void onCreateButtonClicked(ActionEvent e) {
         Stage currentWindow = (Stage)createButton.getScene().getWindow();
         currentWindow.close();
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void onCancelButtonClicked(ActionEvent e) {
         Stage currentWindow = (Stage)cancelButton.getScene().getWindow();
@@ -57,6 +67,10 @@ public class CreateAssociateCustomerWindowController implements Initializable {
         currentWindow.close();
     }
     
+    /**
+     *
+     * @return
+     */
     public int createAssociateCustomer() {        
         return associateCustomerFormController.createAssociateCustomer();
     }

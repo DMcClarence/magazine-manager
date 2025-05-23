@@ -74,11 +74,17 @@ public class MenuBarController implements Initializable {
 
     /**
      * Initializes the treeViewControllerRef class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void createNewFile(ActionEvent e) {
         Alert fileAlert;
@@ -115,6 +121,10 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void openExistingFile(ActionEvent e) {
         Alert fileAlert;
@@ -141,6 +151,10 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void openCreateAssociateCustomerWindow(ActionEvent e) {
         try {
@@ -189,6 +203,10 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void openCreatePayingCustomerWindow(ActionEvent e) {
         try {
@@ -248,6 +266,10 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @param e
+     */
     @FXML
     public void openCreateSupplementMagazineWindow(ActionEvent e) {
         try {
@@ -296,6 +318,10 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public MagazineServiceDatabase openCreateMainMagazineWindow() {
         try {
             Stage stage = new Stage();
@@ -322,6 +348,10 @@ public class MenuBarController implements Initializable {
         return null;
     }
     
+    /**
+     *
+     * @param e
+     */
     public void showBillingInformationWindow(ActionEvent e) {
         try {
             Stage stage = new Stage();
@@ -344,6 +374,9 @@ public class MenuBarController implements Initializable {
         }
     }
             
+    /**
+     *
+     */
     @FXML
     public void saveDBtoFile() {
         if(MagazineService.getDBFile() != null) {
@@ -354,10 +387,17 @@ public class MenuBarController implements Initializable {
         }
     }
     
+    /**
+     *
+     * @param controller
+     */
     public void setTreeViewControllerRef(MagazineServiceTreeViewController controller) {
         this.treeViewControllerRef = controller;
     }
     
+    /**
+     *
+     */
     @FXML
     public void generateMonthlyEmails() {
         YearMonth nextMonth = YearMonth.now().plusMonths(1);

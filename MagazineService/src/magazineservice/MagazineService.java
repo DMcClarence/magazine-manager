@@ -38,29 +38,58 @@ public class MagazineService extends Application {
         launch(args);
     }
     
+    /**
+     *
+     * @return
+     */
     public static MagazineServiceDatabase getDatabase() {
         return MagazineService.db;
     }
     
+    /**
+     *
+     * @param db
+     */
     public static void setDatabase(MagazineServiceDatabase db) {
         MagazineService.db = db;
     }
     
+    /**
+     *
+     * @return
+     */
     public static MagazineServiceDatabaseController getDBController() {
         return MagazineService.dbController;
     }
     
+    /**
+     *
+     * @param dbController
+     */
     public static void setDBController(MagazineServiceDatabaseController dbController) {
         MagazineService.dbController = dbController;
     }
     
+    /**
+     *
+     * @param dbFile
+     */
     public static void setDBFile(File dbFile) {
         MagazineService.dbFile = dbFile;
     }
     
+    /**
+     *
+     * @return
+     */
     public static File getDBFile() {
         return MagazineService.dbFile;
     }
+
+    /**
+     *
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {        
         try {
