@@ -184,7 +184,6 @@ public class MainMagazineFormController implements Initializable, EditableForm {
         
         // Update Object in Database
         updateRefData();
-        System.out.println(mainMagazineRef);
     }
     
     /**

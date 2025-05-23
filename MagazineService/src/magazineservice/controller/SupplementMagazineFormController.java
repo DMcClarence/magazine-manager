@@ -182,7 +182,6 @@ public class SupplementMagazineFormController implements Initializable, Editable
         
         // Update Object in Database
         updateRefData();
-        System.out.println(supplementMagazineRef);
     }
     
     /**

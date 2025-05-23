@@ -217,8 +217,6 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         }   
         
         // Update Object in Database
-        updateRefData();
-        System.out.println(associateCustomerRef);
     }
     
     /**
