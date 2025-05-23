@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.YearMonth;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -225,8 +227,7 @@ public class MenuBarController implements Initializable {
                 }
                 case 3: {
                     fileAlert.setContentText("Customer Creation Failed. Account Number is invalid, must be 8 digit number.");
-                    break;
-                    
+                    break; 
                 }
                 case 4: {
                     fileAlert.setContentText("Customer Creation Failed. Card Number or Expiry is invalid. "
@@ -363,14 +364,25 @@ public class MenuBarController implements Initializable {
         PaymentEmailGenerator peg = new PaymentEmailGenerator();
         peg.setPeriod(nextMonth);
         
-        for(PayingCustomer pc : MagazineService.getDBController().getAllPayingCustomers()) {
-            peg.setRecipient(pc);
-            MagazineService.getDBController().saveEmail(pc.getEmail(), nextMonth, peg.generate());
-            peg.setRecipient(null);
-        }
+        Task<Void> generateEmailsTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                for(PayingCustomer pc : MagazineService.getDBController().getAllPayingCustomers()) {
+                    peg.setRecipient(pc);
+                    MagazineService.getDBController().saveEmail(pc.getEmail(), nextMonth, peg.generate());
+                    peg.setRecipient(null);
+                }
+                
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setContentText("Emails Generated");
+                    alert.showAndWait();
+                });
+                    
+                return null;
+            }
+        };
         
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Emails Generated");
-        alert.showAndWait();
+        new Thread(generateEmailsTask).start();
     }
 }
