@@ -9,5 +9,10 @@ package magazineservice.view;
  * @author 34085068
  */
 public interface EditableForm {
+
+    /**
+     *
+     * @param editable
+     */
     void setEditable(boolean editable);
 }

@@ -89,12 +89,17 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         
         benefactorChoices.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null && newValue != oldValue) {
-                try {
-                    MagazineService.getDBController().changeBenefactor(associateCustomerRef.getEmail(), associateCustomerRef.getBenefactor().getEmail(), benefactorChoices.getSelectionModel().getSelectedItem());
-                    benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem()); 
+                if(associateCustomerRef != null) { 
+                    try {
+                        MagazineService.getDBController().changeBenefactor(associateCustomerRef.getEmail(), associateCustomerRef.getBenefactor().getEmail(), benefactorChoices.getSelectionModel().getSelectedItem());
+                        benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem()); 
+                    }
+                    catch(ClassCastException cce) {
+                        cce.printStackTrace();
+                    }
                 }
-                catch(ClassCastException cce) {
-                    cce.printStackTrace();
+                else {
+                    benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem()); 
                 }
             }
         });
@@ -143,7 +148,7 @@ public class AssociateCustomerFormController implements Initializable, EditableF
     public void updateRefData() {
         if(associateCustomerRef != null) {
             associateCustomerRef.setName(nameFieldTextBox.getText());
-            // associateCustomerRef.setEmail(emailFieldTextBox.getText());
+            associateCustomerRef.setEmail(emailFieldTextBox.getText());
             associateCustomerRef.setBenefactor(benefactorRef);
             
             for(CheckBox cb : supplementListController.getSupplementList()) {
@@ -199,13 +204,14 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         else if(!(editable) && associateCustomerRef != null) {
             if((nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()) ||
                (benefactorRef == null)) {
+                nameFieldTextBox.setText(displayedName.getText());
                 Alert alert = new Alert(Alert.AlertType.ERROR); 
                 alert.setContentText("Customer Update Failed. One or More Fields Were Empty.");
                 alert.showAndWait();
             }
             else {
                 displayedName.setText(nameFieldTextBox.getText());
-//              displayedEmail.setText(emailFieldTextBox.getText());
+                displayedEmail.setText(emailFieldTextBox.getText());
                 try {
                     benefactorRef = (PayingCustomer)MagazineService.getDBController().getCustomer(benefactorChoices.getSelectionModel().getSelectedItem());
                 }
@@ -217,6 +223,7 @@ public class AssociateCustomerFormController implements Initializable, EditableF
         }   
         
         // Update Object in Database
+        updateRefData();
     }
     
     /**
@@ -230,23 +237,27 @@ public class AssociateCustomerFormController implements Initializable, EditableF
             return 1;
         }
         
-        if(MagazineService.getDBController().getCustomer(emailFieldTextBox.getText()) != null) {
+        if(MagazineService.getDBController().getCustomer( emailFieldTextBox.getText()) != null) {
             return 2;
         }
         
-        AssociateCustomer associateCustomer = new AssociateCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
+        try {
+           AssociateCustomer associateCustomer = new AssociateCustomer(nameFieldTextBox.getText(), emailFieldTextBox.getText(), 
                                                                     MagazineService.getDBController().getMainMagazine(), 
-                                                                    benefactorRef);
+                                                                    benefactorRef); 
+            MagazineService.getDBController().addCustomer(associateCustomer);
         
-        MagazineService.getDBController().addCustomer(associateCustomer);
-        
-        for(CheckBox cb : supplementListController.getSupplementList()) {
-            if(cb.isSelected()) {
-                MagazineService.getDBController().addToSubscription(cb.getText(), associateCustomer.getEmail());
+            for(CheckBox cb : supplementListController.getSupplementList()) {
+                if(cb.isSelected()) {
+                    MagazineService.getDBController().addToSubscription(cb.getText(), associateCustomer.getEmail());
+                }
+                else {
+                    MagazineService.getDBController().removeFromSubscription(cb.getText(), associateCustomer.getEmail());
+                }
             }
-            else {
-                MagazineService.getDBController().removeFromSubscription(cb.getText(), associateCustomer.getEmail());
-            }
+        }
+        catch(IllegalArgumentException iae) {
+            return 3;
         }
         
         return 0;

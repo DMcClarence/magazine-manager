@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
@@ -73,6 +74,7 @@ public class SupplementMagazineFormController implements Initializable, Editable
     private Label displayedCount;
     
     private SupplementMagazine supplementMagazineRef = null;
+    
     private TreeItem<String> treeItemRef = null;
     
     /**
@@ -82,35 +84,6 @@ public class SupplementMagazineFormController implements Initializable, Editable
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                displayedTitle.setText(titleFieldTextBox.getText());
-//                if(treeItemRef != null) {
-//                   treeItemRef.setValue(titleFieldTextBox.getText()); 
-//                }
-//            }}
-//        );
-//        
-//        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                titleFieldTextBox.setText(displayedTitle.getText());
-//                if(treeItemRef != null) {
-//                  treeItemRef.setValue(displayedTitle.getText());  
-//                }
-//            }}
-//        );
-//        
-//        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
-//            }}
-//        );
-//        
-//        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
-//            }}
-//        );
     }    
     
     /**
@@ -177,7 +150,15 @@ public class SupplementMagazineFormController implements Initializable, Editable
         }
         else if(!(editable) && supplementMagazineRef != null) {
             displayedTitle.setText(titleFieldTextBox.getText());
-            displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+            try {
+                displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+            }
+            catch(NumberFormatException nfe) {
+                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Weekly Cost Update Failed.");
+                alert.showAndWait();
+            }
         }
         
         // Update Object in Database
@@ -199,10 +180,17 @@ public class SupplementMagazineFormController implements Initializable, Editable
             return 2;
         }
         
-        SupplementMagazine supplementMagazine = new SupplementMagazine(titleFieldTextBox.getText(), 
-                                                                        Double.parseDouble(weeklyCostFieldTextBox.getText()));
-        
-        MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
+        try {
+           SupplementMagazine supplementMagazine = new SupplementMagazine(titleFieldTextBox.getText(), 
+                                                                        Double.parseDouble(weeklyCostFieldTextBox.getText())); 
+           MagazineService.getDBController().addSupplementMagazine(supplementMagazine);
+        }
+        catch(NumberFormatException nfe) {
+            return 3;
+        }
+        catch(IllegalArgumentException iae) {
+            return 3;
+        }
         
         return 0;
     }

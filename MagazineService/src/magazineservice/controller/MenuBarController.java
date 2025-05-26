@@ -190,6 +190,10 @@ public class MenuBarController implements Initializable {
                     fileAlert.setContentText("Customer Creation Failed. Email already in use.");
                     break;
                 }
+                case 3: {
+                    fileAlert.setContentText("Customer Creation Failed. \nThere was an error in the data entered.");
+                    break;
+                }
                 default: {
                     fileAlert.setContentText("Customer Creation Failed. An error occured.");
                     break;
@@ -244,12 +248,15 @@ public class MenuBarController implements Initializable {
                     break;
                 }
                 case 3: {
-                    fileAlert.setContentText("Customer Creation Failed. Account Number is invalid, must be 8 digit number.");
+                    fileAlert.setContentText("Customer Creation Failed.\nEmail or Account Number (8 digit number) is invalid");
                     break; 
                 }
                 case 4: {
-                    fileAlert.setContentText("Customer Creation Failed. Card Number or Expiry is invalid. "
-                            + "Card number must be an 16 digit number and Expiry must be in the future.");
+                    fileAlert.setContentText("""
+                                             Customer Creation Failed. 
+                                             Card Number or Expiry is invalid. 
+                                             Card number must be a 16 digit number 
+                                             and Expiry must be in the future.""");
                     break;
                     
                 }
@@ -303,6 +310,10 @@ public class MenuBarController implements Initializable {
                 }
                 case 2: {
                     fileAlert.setContentText("Supplement Creation Failed. Title already in use.");
+                    break;
+                }
+                case 3: {
+                    fileAlert.setContentText("Supplement Creation Failed. \nThere is a problem with the weekly cost.");
                     break;
                 }
                 default: {

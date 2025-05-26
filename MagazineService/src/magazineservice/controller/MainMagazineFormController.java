@@ -76,35 +76,6 @@ public class MainMagazineFormController implements Initializable, EditableForm {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        titleFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                displayedTitle.setText(titleFieldTextBox.getText());
-//                if(treeItemRef != null) {
-//                    treeItemRef.setValue(titleFieldTextBox.getText());  
-//                }
-//            }}
-//        );
-//        
-//        displayedTitle.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                titleFieldTextBox.setText(displayedTitle.getText());
-//                if(treeItemRef != null) {
-//                    treeItemRef.setValue(displayedTitle.getText());   
-//                }
-//            }}
-//        );
-//        
-//        weeklyCostFieldTextBox.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                displayedWeeklyCost.setText(weeklyCostFieldTextBox.getText());
-//            }}
-//        );
-//        
-//        displayedWeeklyCost.textProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null && newValue != oldValue){
-//                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
-//            }}
-//        );
     }
     
     /**
@@ -179,7 +150,16 @@ public class MainMagazineFormController implements Initializable, EditableForm {
                     treeItemRef.setValue(displayedTitle.getText());   
                 }
             }
-            displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+            
+            try {
+                displayedWeeklyCost.setText(String.format("%.2f", Double.valueOf(weeklyCostFieldTextBox.getText())));
+            }
+            catch(NumberFormatException nfe) {
+                weeklyCostFieldTextBox.setText(displayedWeeklyCost.getText());
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Weekly Cost Update Failed.");
+                alert.showAndWait();
+            }
         }
         
         // Update Object in Database
@@ -196,8 +176,16 @@ public class MainMagazineFormController implements Initializable, EditableForm {
             return null;
         }
         
-        return new MagazineServiceDatabase(titleFieldTextBox.getText(), 
+        try {
+            return new MagazineServiceDatabase(titleFieldTextBox.getText(), 
                                             Double.parseDouble(weeklyCostFieldTextBox.getText()));
+        }
+        catch(NumberFormatException nfe) {
+            return null;
+        }
+        catch(IllegalArgumentException iae) {
+            return null;
+        }
     }
     
     /**

@@ -13,14 +13,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import magazineservice.model.AssociateCustomer;
 
 /**
  * FXML Controller class
  *
  * @author 34085068
  */
-public class CreateAssociateCustomerWindowController implements Initializable {
+public class CreateAssociateCustomerWindowController implements Initializable {    
     @FXML
     private BorderPane borderPane;
     

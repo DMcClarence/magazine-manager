@@ -154,7 +154,6 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             if(newValue != null && newValue != oldValue){ 
                 switch(paymentMethodChoices.getSelectionModel().getSelectedIndex()) {
                     case 0 -> { // Direct Debit
-                        System.out.println("Direct Debit");
                         accountNumberField.setManaged(true);
                         accountNumberField.setVisible(true);
                         cardNumberField.setManaged(false);
@@ -163,7 +162,6 @@ public class PayingCustomerFormController implements Initializable, EditableForm
                         expiryField.setVisible(false);
                     }
                     case 1 -> { // Credit Card
-                        System.out.println("Credit Card");
                         cardNumberField.setManaged(true);
                         cardNumberField.setVisible(true);
                         expiryField.setManaged(true);
@@ -357,8 +355,14 @@ public class PayingCustomerFormController implements Initializable, EditableForm
             }
         }
         else if(!(editable) && payingCustomerRef != null) {
-            displayedName.setText(nameFieldTextBox.getText());
-            displayedEmail.setText(emailFieldTextBox.getText());
+            if(nameFieldTextBox.getText() == null || nameFieldTextBox.getText().strip().isEmpty()){
+                nameFieldTextBox.setText(displayedName.getText());
+            }
+            
+            if(emailFieldTextBox.getText() == null || emailFieldTextBox.getText().strip().isEmpty()) {
+                emailFieldTextBox.setText(displayedEmail.getText());
+            }
+            
             switch(paymentMethodChoices.getSelectionModel().getSelectedIndex()) {
                 case 0 -> {
                     if(accountNumberFieldTextBox.getText() != null && !accountNumberFieldTextBox.getText().strip().isEmpty()) {

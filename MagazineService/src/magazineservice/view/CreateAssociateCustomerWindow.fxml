@@ -11,7 +11,12 @@
             prefHeight="350.0" prefWidth="350.0" 
             fx:controller="magazineservice.controller.CreateAssociateCustomerWindowController">
     <center>
-        <fx:include fx:id="associateCustomerForm" source="AssociateCustomerForm.fxml"/>
+        <ScrollPane fitToWidth="true">
+            <fx:include fx:id="associateCustomerForm" source="AssociateCustomerForm.fxml"/>
+            <BorderPane.margin>
+                <Insets bottom="5.0f" left="5.0f" right="5.0f" top="5.0f"/>
+            </BorderPane.margin>
+        </ScrollPane>
     </center>
     <bottom>
         <ButtonBar fx:id="createCancelBar" BorderPane.alignment="BOTTOM_LEFT">
