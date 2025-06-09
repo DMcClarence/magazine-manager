@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="viewableForm" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="magazineservice.controller.PayingCustomerFormController">
+    <center>
+        <VBox fx:id="fieldContainer" spacing="15.0f">
+            <children>
+                <HBox fx:id="nameField" spacing="5.0f">
+                    <Label fx:id="nameFieldLabel" text="Name: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedName"></Label>
+                    <TextField fx:id="nameFieldTextBox" managed="false" visible="false"></TextField>  
+                </HBox>
+                <HBox fx:id="emailField" spacing="5.0f">
+                    <Label fx:id="emailFieldLabel" text="Email: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedEmail"></Label>
+                    <TextField fx:id="emailFieldTextBox" managed="false" visible="false"></TextField> 
+                </HBox>
+                <HBox fx:id="typeField" spacing="5.0f">
+                    <Label fx:id="typeFieldLabel" text="Type: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="payingLabel" text="Paying Customer"></Label>
+                </HBox>
+                <HBox fx:id="paymentMethodField" spacing="5.0f">
+                    <Label fx:id="paymentMethodFieldLabel" text="Payment Method: " alignment="CENTER_LEFT"></Label>
+                    <ComboBox fx:id="paymentMethodChoices" disable="true"></ComboBox>
+                </HBox>
+                <HBox fx:id="accountNumberField" spacing="5.0f" managed="false" visible="false">
+                    <Label fx:id="accountNumberFieldLabel" text="Account Number: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedAccountNumber"></Label>
+                    <TextField fx:id="accountNumberFieldTextBox" managed="false" visible="false"></TextField>  
+                </HBox>
+                <HBox fx:id="cardNumberField" spacing="5.0f" managed="false" visible="false">
+                    <Label fx:id="cardNumberFieldLabel" text="Card Number: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedCardNumber"></Label>
+                    <TextField fx:id="cardNumberFieldTextBox" managed="false" visible="false"></TextField>  
+                </HBox>
+                <HBox fx:id="expiryField" spacing="5.0f" managed="false" visible="false">
+                    <Label fx:id="expiryFieldLabel" text="Expiry: " alignment="CENTER_LEFT"></Label>
+                    <Label fx:id="displayedExpiry"></Label>
+                    <ComboBox fx:id="selectedMonth" disable="true"></ComboBox>
+                    <ComboBox fx:id="selectedYear" disable="true"></ComboBox>
+                </HBox>
+                <VBox>
+                    <Label fx:id="associatesLabel" text="Associates: " visible="false" managed="false"></Label>
+                    <ListView fx:id="associatesList" prefHeight="200.0" visible="false" managed="false"></ListView>
+                </VBox>
+                <VBox>
+                    <Label text="Supplements: "></Label>
+                    <fx:include fx:id="supplementList" source="SupplementMagazineSelector.fxml"/>
+                </VBox>
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0f" left="10.0f" right="10.0f" top="10.0f" />
+            </BorderPane.margin>
+        </VBox>
+    </center>
+</BorderPane>

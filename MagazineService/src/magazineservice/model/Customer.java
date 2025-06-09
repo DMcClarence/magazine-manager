@@ -4,6 +4,7 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,7 +13,7 @@ import java.util.regex.Pattern;
  *
  * @author 34085068
  */
-public abstract class Customer {
+public abstract class Customer implements Serializable {
 
     /**
      *

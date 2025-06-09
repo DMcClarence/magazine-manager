@@ -4,11 +4,13 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author 34085068
  */
-public abstract class Magazine {
+public abstract class Magazine implements Serializable {
 
     /**
      *
@@ -22,7 +24,7 @@ public abstract class Magazine {
 
     /**
      *
-     * @param title
+     * @param name
      * @param weeklyCost
      */
     public Magazine(String name, double weeklyCost) throws IllegalArgumentException {

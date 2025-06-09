@@ -4,11 +4,13 @@
  */
 package magazineservice.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author 34085068
  */
-public abstract class PaymentMethod implements Payable {
+public abstract class PaymentMethod implements Payable, Serializable {
 
     /**
      *
